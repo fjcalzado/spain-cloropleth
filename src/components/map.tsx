@@ -1,22 +1,20 @@
 import * as React from 'react';
 import * as d3 from 'd3';
 import { geoConicConformalSpain } from 'd3-composite-projections';
-import {feature } from 'topojson-client';
+import { feature } from 'topojson-client';
 import { presimplify as topojsonPresimplify } from 'topojson-simplify';
-import { ZoomableCanvasMap } from 'spamjs';
 
-import './spain-comunidad.json';
-import './elecciones.json';
+ // TODO remove an load from remote site
+const municipalitiesdata = require('./spain-municipalities.json');
+const regionsdata = require('./spain-comunidad.json');
+const resultsTsv = require('./results-granada.tsv');
+
 const classNames = require('./map.scss');
 
 interface Props {
   width: number;
   height: number;
   data: any;
-}
-
-interface State {
-  g: any;
 }
 
 const cities = [
@@ -114,240 +112,111 @@ const communities = [
   },
 ];
 
-// Let's add some declarations (hover callback, mouse coords, width and height of the canvas)
-let hover = null;
-let mouseX;
-let mouseY;
+const resultsColorScheme = new Map();
+resultsColorScheme.set('PP', '#0cb2ff');
+resultsColorScheme.set('PSOE', '#ff0000');
+resultsColorScheme.set('PODEMOS', '#9a569a');
+resultsColorScheme.set('CS', '#fca501');
 
-const colors1 = [
-  '#FEFCED',
-  '#FFF8D9',
-  '#FEF5BD',
-  '#FFEDB8',
-  '#FDE3B3',
-  '#F8CFAA',
-  '#F1A893',
-  '#E47479',
-  '#C03F58',
-  '#760420',
-];
+const projection = geoConicConformalSpain();
 
-const colors2 = [
-  '#D1DBDF',
-  '#C9D4DA',
-  '#AEBFC7',
-  '#93A9B4',
-  '#7794A1',
-  '#607D8B',
-  '#4D6570',
-  '#3A4C55',
-  '#28343A',
-  '#151B1E',
-];
+const path = d3.geoPath().projection(projection);
 
-// Let's define a range of colors per range of population, and a numeric format.
-const color = d3.scaleThreshold()
-  .domain([5, 9, 19, 49, 74, 124, 249, 499, 1000])
-  .range(colors1);
+const resultsData = d3.map();
 
-const colors = new Map();
-colors.set('PP', '#0cb2ff');
-colors.set('PSOE', '#0cb2ff');
-colors.set('PODEMOS', '#9a569a');
-colors.set('ECP', '#01c6a4');
+export class Elections extends React.Component<Props> {
 
-const format = d3.format(',.4');
-
-// Let's add a tooltip (it will hook under the 'body' dom item)
-const tooltip = d3
-  .select('body')
-  .append('div')
-  .attr('class', classNames.gTooltip)
-  .style('opacity', 0);
-
-// Let's hook on to the dom mouse move event and change the position of the tooltip when the mouse coords are changing.
-document.onmousemove = handleMouseMove;
-
-function handleMouseMove(event) {
-  mouseX = event.pageX;
-  mouseY = event.pageY;
-
-  tooltip.style('left', mouseX - 100 + 'px').style('top', mouseY + 25 + 'px');
-}
-
-// Lets define a chart legend (styled li including the range colors)
-// const legend = d3
-//     .select('body')
-//     .append('div')
-//     .attr('class', 'gLegend')
-//     .append('span')
-//     .text('People per km2')
-//     .attr('class', 'gLegendText');
-
-const legendList = d3
-  .select('.gLegend')
-  .append('ul')
-  .attr('class', classNames.listInline);
-
-const keys = legendList.selectAll('li.key').data(color.range());
-
-keys
-  .enter()
-  .append('li')
-  .attr('class', classNames.key)
-  .style('border-top-color', String)
-  .text(function(d) {
-    const r = color.invertExtent(d);
-    return r[0];
-  });
-
-export class Elections extends React.Component<Props, State> {
+  private svg;
+  private g;
+  private tooltip;
+  private zoom;
 
   constructor(props) {
     super(props);
+  }
 
-    this.state = {
-      g: null,
-    };
+  showTooltip = (d) => {
+    const id = d.properties.NATCODE;
+    const party = resultsData.get(id);
+    const partyLabel = party ? party : 'N/A';
+
+    this.tooltip.classed(classNames.hidden, false)
+      .attr('style', 'left:' + (d3.event.clientX + 10) + 'px; top:' + (d3.event.clientY - 10) + 'px')
+      .html(
+        `<div>
+          <span> ${d.properties.NAMEUNIT} </span>
+          <br />
+          <span> ${partyLabel} </span>
+        </div>`,
+    );
+  }
+
+  hideTooltip = () => {
+    this.tooltip.classed(classNames.hidden, true);
   }
 
   loadResources = () => {
-    d3.queue()
-      .defer(d3.json, 'spain-comunidad.json')
-      .defer(d3.json, 'elecciones.json')
-      .await(this.ready);
-  }
-
-  ready = (error, comm, el) => {
-    if (error) {
-      throw error;
-    }
-    topojsonPresimplify(comm);
-    topojsonPresimplify(el);
-
-    const map = new ZoomableCanvasMap({
-      element: 'body',
-      zoomScale: 0.8,
-      width: this.props.width,
-      height: this.props.height,
-      projection: geoConicConformalSpain()
-        .translate([this.props.width / 2, this.props.height / 2]) // move to the center of the canvas
-        .scale(this.props.width * 3.65), // set the initial zoom level
-      data: [
-        // Map features
-        {
-          features: feature(el, el.objects['ESP_adm1']),
-          static: {
-            paintfeature: function(parameters, d) {
-              if (d.properties.EL) {
-                parameters.context.fillStyle = colors.get(d.properties.EL);
-                parameters.context.fill();
-              }
-            },
-          },
-          dynamic: {
-            postpaint: function(parameters) {
-              if (!hover) {
-                tooltip.style('opacity', 0);
-                return;
-              }
-
-              parameters.context.beginPath();
-              parameters.context.lineWidth = 1.5 / parameters.scale;
-              parameters.path(hover);
-              parameters.context.stroke();
-
-              tooltip
-                .style('opacity', 1)
-                .html(
-                  `<div class=${classNames.gPlace}>` +
-                  `<span class=${classNames.gHeadline}>` +
-                  hover.properties.NAME_1 +
-                  '</span>' +
-                  '</div>' +
-                  '<span>Elecciones</span>' +
-                  `<span class=${classNames.gValue}>` +
-                  hover.properties.EL +
-                  '</span>',
-                );
-            },
-          },
-          events: {
-            hover: function(parameters, d) {
-              hover = d;
-              parameters.map.paint();
-            },
-          },
-        },
-        // Map borders and labels
-        {
-          features: feature(comm, comm.objects['ESP_adm1']),
-          static: {
-            paintfeature: function(parameters, d) {
-              parameters.context.lineWidth = 0.5 / parameters.scale;
-              parameters.context.strokeStyle = 'rgb(130,130,130)';
-              parameters.context.stroke();
-            },
-            postpaint: function(parameters) {
-              for (const community of communities) {
-                // Project the coordinates into our Canvas map
-                const projectedPoint = parameters.projection(community.coordinates);
-
-                // Create the label dot
-                parameters.context.beginPath();
-
-                parameters.context.arc(
-                  projectedPoint[0],
-                  projectedPoint[1],
-                  2 / parameters.scale,
-                  0,
-                  2 * Math.PI,
-                  true,
-                );
-
-                // Font properties
-                const fontSize = 11 / parameters.scale;
-                parameters.context.textAlign = 'center';
-                parameters.context.font = fontSize + 'px sans-serif';
-
-                // Create the text shadow
-                parameters.context.shadowColor = 'black';
-                parameters.context.shadowBlur = 5;
-                parameters.context.lineWidth = 1 / parameters.scale;
-                parameters.context.strokeText(
-                  community.name,
-                  projectedPoint[0],
-                  projectedPoint[1] - 7 / parameters.scale,
-                );
-
-                // Paint the labels
-                parameters.context.fillStyle = 'white';
-                parameters.context.fillText(
-                  community.name,
-                  projectedPoint[0],
-                  projectedPoint[1] - 7 / parameters.scale,
-                );
-
-                parameters.context.fill();
-              }
-            },
-          },
-          events: {
-            click: function(parameters, d) {
-              parameters.map.zoom(d);
-            },
-          },
-        },
-      ],
+    /*d3.queue()
+      .defer(d3.json, './spain-municipalities.json')
+      .defer(d3.tsv, 'results-granada.tsv', function(d) { resultsData.set(d.id, d.party); })
+      .await(this.ready);*/
+    resultsTsv.forEach((d) => {
+      resultsData.set(d.id, d.party);
     });
-    map.init();
+    this.ready(null, municipalitiesdata, regionsdata);
   }
 
-  componentWillReceiveProps(nextProps) {
-    // we have to handle the DOM ourselves now
-    if (nextProps.data !== this.props.data) {
-      // this.renderBubbles(nextProps.data);
+  buildSvg = () => {
+    this.svg = d3.select('#chart')
+      .append('svg')
+      .attr('width', this.props.width)
+      .attr('height', this.props.height)
+      .selectAll('path');
+
+    this.g = this.svg.append('g');
+
+    this.zoom = d3.zoom()
+      .scaleExtent([1 / 4, 9])
+      .on('zoom', function () {
+        d3.select('g').attr('transform', d3.event.transform);
+      });
+
+    this.tooltip = d3.select('#chart').append('div').attr('class', `${classNames.tooltip} ${classNames.hidden}`);
+  }
+
+  ready = (error, data, regions) => {
+
+    if (error) {
+      alert(error);
     }
+
+    topojsonPresimplify(data);
+    topojsonPresimplify(regions);
+
+    const municipalies = feature(data, data.objects.municipalities);
+
+    this.svg.data(municipalies.features)
+      .enter()
+      .append('path')
+      .attr('fill', function (d) {
+        const id = d.properties.NATCODE;
+        const party = resultsData.get(id);
+        return resultsColorScheme.get(party);
+      })
+      .attr('d', path)
+      .attr('class', classNames.municipalityBoundary)
+      .on('mousemove', this.showTooltip)
+      .on('mouseout', this.hideTooltip);
+    // .call(this.zoom);
+
+    // Draw region boundaries
+    /*const regionsObj = feature(regions, regions.objects.ESP_adm1);
+    this.g.selectAll('.region')
+       .data(regionsObj.feature)
+       .enter()
+       .append('path')
+       .attr('d', path)
+       .attr('class', classNames.regionBoundary);*/
   }
 
   shouldComponentUpdate() {
@@ -355,13 +224,16 @@ export class Elections extends React.Component<Props, State> {
   }
 
   componentDidMount() {
+    this.buildSvg();
+
     this.loadResources();
   }
 
   render() {
-    const { width, height } = this.props;
     return (
-      <div/>
+      <div id="wrapper">
+        <div id="chart" />
+      </div>
     );
   }
 }

@@ -76,6 +76,19 @@ module.exports = {
         test: /\.(png|jpg|ico)?$/,
         loader: 'url-loader?limit=10000&mimetype=image/png',
       },
+      {
+        test: /\.json$/,
+        loader: 'json-loader'
+      },
+      {
+        test: /\.(csv|tsv)$/,
+        loader: 'csv-loader',
+        options: {
+          dynamicTyping: true,
+          header: true,
+          skipEmptyLines: true
+        }
+      },
     ]
   },
   plugins: [
