@@ -4,113 +4,17 @@ import { geoConicConformalSpain } from 'd3-composite-projections';
 import { feature } from 'topojson-client';
 import { presimplify as topojsonPresimplify } from 'topojson-simplify';
 
- // TODO remove an load from remote site
-const municipalitiesdata = require('./spain-municipalities.json');
-const regionsdata = require('./spain-comunidad.json');
-const resultsTsv = require('./results-granada.tsv');
-
 const classNames = require('./map.scss');
+
+ // TODO remove an load from remote site
+const municipalitiesdata = require('../content/data/spain-municipalities.json');
+const regionsdata = require('../content/data/spain-comunidad.json');
+const resultsTsv = require('../content/data/results-granada.tsv');
 
 interface Props {
   width: number;
   height: number;
-  data: any;
 }
-
-const cities = [
-  {
-    name: 'Madrid',
-    coordinates: [-3.723472, 40.429348],
-  },
-  { name: 'Barcelona', coordinates: [2.18559, 41.394579] },
-  { name: 'Bilbao', coordinates: [-2.930737, 43.282435] },
-  { name: 'Valencia', coordinates: [-0.33419, 39.494676] },
-  { name: 'Sevilla', coordinates: [-5.990362, 37.389681] },
-  { name: 'Santiago', coordinates: [-8.544953, 42.906538] },
-  { name: 'Málaga', coordinates: [-4.3971722, 36.7585406] },
-  { name: 'Alicante', coordinates: [-0.4814900, 38.3451700] },
-  { name: 'Palma de Mallorca', coordinates: [2.6502400, 39.5693900] },
-  { name: 'Zaragoza', coordinates: [-0.876566, 41.6563497] },
-  {
-    name: 'Santa Cruz de Tenerife',
-    coordinates: [-16.251692, 28.46326],
-  },
-];
-
-const communities = [
-  {
-    name: 'Andalucía',
-    coordinates: [-4.5000000, 37.6000000],
-  },
-  {
-    name: 'Comunidad Valenciana',
-    coordinates: [-0.3545661, 39.4561165],
-  },
-  {
-    name: 'Cataluña',
-    coordinates: [1.8676800, 41.8204600],
-  },
-  {
-    name: 'Aragón',
-    coordinates: [-0.7279349, 41.4519970],
-  },
-  {
-    name: 'Madrid',
-    coordinates: [-3.723472, 40.429348],
-  },
-  {
-    name: 'Islas Baleares',
-    coordinates: [2.971163, 39.582362],
-  },
-  {
-    name: 'Galicia',
-    coordinates: [-8.1338558, 42.5750554],
-  },
-  {
-    name: 'Extremadura',
-    coordinates: [-6.1666700, 39.1666700],
-  },
-  {
-    name: 'Asturias',
-    coordinates: [-5.8611200, 43.3666200],
-  },
-  {
-    name: 'Castilla y León',
-    coordinates: [-4.7285413, 41.6522966],
-  },
-  {
-    name: 'Castilla-La Mancha',
-    coordinates: [-2.984430, 39.429895],
-  },
-  {
-    name: 'Murcia',
-    coordinates: [-1.131592, 37.987503],
-  },
-  {
-    name: 'La Rioja',
-    coordinates: [-2.552169, 42.292470],
-  },
-  {
-    name: 'País Vasco',
-    coordinates: [-2.630668, 43.021637],
-  },
-  {
-    name: 'Navarra',
-    coordinates: [-1.656592, 42.812704],
-  },
-  {
-    name: 'Islas Canarias',
-    coordinates: [-16.599415, 28.239233],
-  },
-  {
-    name: 'Cantabria',
-    coordinates: [-4.036580, 43.204608],
-  },
-  {
-    name: 'Ceuta y Melilla',
-    coordinates: [-5.3520718, 35.8941157],
-  },
-];
 
 const resultsColorScheme = new Map();
 resultsColorScheme.set('PP', '#0cb2ff');
@@ -119,9 +23,7 @@ resultsColorScheme.set('PODEMOS', '#9a569a');
 resultsColorScheme.set('CS', '#fca501');
 
 const projection = geoConicConformalSpain();
-
 const path = d3.geoPath().projection(projection);
-
 const resultsData = d3.map();
 
 export class Elections extends React.Component<Props> {
