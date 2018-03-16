@@ -6,14 +6,13 @@ import { presimplify as topojsonPresimplify } from 'topojson-simplify';
 
 const classNames = require('./map.scss');
 
- // TODO remove an load from remote site
 const municipalitiesdata = require('../content/data/spain-municipalities.json');
 const regionsdata = require('../content/data/spain-comunidad.json');
 const resultsTsv = require('../content/data/results-granada.tsv');
 
 interface Props {
-  width: number;
-  height: number;
+  width: string;
+  height: string;
 }
 
 const resultsColorScheme = new Map();
@@ -58,49 +57,41 @@ export class Elections extends React.Component<Props> {
   }
 
   loadResources = () => {
-    /*d3.queue()
-      .defer(d3.json, './spain-municipalities.json')
-      .defer(d3.tsv, 'results-granada.tsv', function(d) { resultsData.set(d.id, d.party); })
-      .await(this.ready);*/
     resultsTsv.forEach((d) => {
       resultsData.set(d.id, d.party);
     });
-    this.ready(null, municipalitiesdata, regionsdata);
   }
 
   buildSvg = () => {
+    this.zoom = d3.zoom()
+      .scaleExtent([1 / 4, 9])
+      .on('zoom', function () {
+        const g = d3.select('g');
+        g.attr('transform', d3.event.transform);
+      });
+
     this.svg = d3.select('#chart')
       .append('svg')
       .attr('width', this.props.width)
       .attr('height', this.props.height)
-      .selectAll('path');
+      .call(this.zoom);
 
     this.g = this.svg.append('g');
-
-    this.zoom = d3.zoom()
-      .scaleExtent([1 / 4, 9])
-      .on('zoom', function () {
-        d3.select('g').attr('transform', d3.event.transform);
-      });
 
     this.tooltip = d3.select('#chart').append('div').attr('class', `${classNames.tooltip} ${classNames.hidden}`);
   }
 
-  ready = (error, data, regions) => {
+  drawMap = (geoMunicipalities, geoRegions) => {
 
-    if (error) {
-      alert(error);
-    }
+    topojsonPresimplify(geoMunicipalities);
+    topojsonPresimplify(geoRegions);
 
-    topojsonPresimplify(data);
-    topojsonPresimplify(regions);
-
-    const municipalies = feature(data, data.objects.municipalities);
-
-    this.svg.data(municipalies.features)
+    // Draw municipality boundaries
+    const municipalies = feature(geoMunicipalities, geoMunicipalities.objects.municipalities);
+    this.g.selectAll('path').data(municipalies.features)
       .enter()
       .append('path')
-      .attr('fill', function (d) {
+      .attr('fill', function(d) {
         const id = d.properties.NATCODE;
         const party = resultsData.get(id);
         return resultsColorScheme.get(party);
@@ -109,16 +100,15 @@ export class Elections extends React.Component<Props> {
       .attr('class', classNames.municipalityBoundary)
       .on('mousemove', this.showTooltip)
       .on('mouseout', this.hideTooltip);
-    // .call(this.zoom);
 
     // Draw region boundaries
-    /*const regionsObj = feature(regions, regions.objects.ESP_adm1);
+    const regions = feature(geoRegions, geoRegions.objects.ESP_adm1);
     this.g.selectAll('.region')
-       .data(regionsObj.feature)
-       .enter()
-       .append('path')
-       .attr('d', path)
-       .attr('class', classNames.regionBoundary);*/
+      .data(regions.features)
+      .enter()
+      .append('path')
+      .attr('d', path)
+      .attr('class', classNames.regionBoundary);
   }
 
   shouldComponentUpdate() {
@@ -127,13 +117,13 @@ export class Elections extends React.Component<Props> {
 
   componentDidMount() {
     this.buildSvg();
-
     this.loadResources();
+    this.drawMap(municipalitiesdata, regionsdata);
   }
 
   render() {
     return (
-      <div id="wrapper">
+      <div className={classNames.container}>
         <div id="chart" />
       </div>
     );

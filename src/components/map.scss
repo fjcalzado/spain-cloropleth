@@ -1,20 +1,19 @@
-#wrapper {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
+.container {
+  align-self: center;
   justify-content: center;
-  border: 2px solid #000;
+  background-color: black;
+  width: 100%;
 }
 
 .municipality-boundary {
-  stroke: grey;
+  stroke: white;
   stroke-width: .1px;
 }
 
 .region-boundary {
-  stroke: green;
-  stroke-width: 1px;
+  stroke: white;
+  stroke-width: .4px;
+  fill: none;
 }
 
 .hidden {
@@ -23,11 +22,12 @@
 
 div.tooltip {
   background-color: lightgrey;
+  color: black;
   padding: 2px;
   text-shadow: #f5f5f5 0 1px 0;
-  font: 12px Helvetica Neue;
+  font-size: 12px;
   border: 1px solid;
-  border-color: black;
+  border-color: grey;
   border-radius: 2px;
   opacity: 0.95;
   position: absolute;
