@@ -8,7 +8,7 @@ const classNames = require('./map.scss');
 
 const municipalitiesdata = require('../content/data/spain-municipalities.json');
 const regionsdata = require('../content/data/spain-comunidad.json');
-const resultsTsv = require('../content/data/results-granada.tsv');
+const resultsTsv = require('../content/data/results-fake.tsv');
 
 interface Props {
   width: string;
@@ -57,6 +57,7 @@ export class Elections extends React.Component<Props> {
   }
 
   loadResources = () => {
+    console.log("stop");
     resultsTsv.forEach((d) => {
       resultsData.set(d.id, d.party);
     });
