@@ -4,13 +4,17 @@ _Project under development_
 
 The idea of this project is to visualize data on a map of Spain using React and D3JS technologies.
 
+Currently municipalities are filled with fake data but can easily feeded with real data changing the file results-fake.tsv.
+
+You can use pan and zoom using scroll or double click.
+
 ## Input data
 
 Currently three files located in './content/data' are used to draw the map and fill the colors:
 
 - spain-comunidad.json: topojson file with region data.
 - spain-municipalities.json: topojson file with municipalities data.
-- results.tsv: input data with the most voted party in each municipality.
+- results-tsv.tsv: input data with the most voted party in each municipality.
 
 ## Steps to build it
 
