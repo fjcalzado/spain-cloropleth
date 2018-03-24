@@ -6,6 +6,16 @@ export const buildTooltip = (parent, tooltipStyles, hiddenStyles) => (
     .attr('class', `${tooltipStyles} ${hiddenStyles}`)
 );
 
+export const buildZoom = (parent) => (
+  d3.zoom()
+    .scaleExtent([1 / 4, 9])
+    .on('zoom', zoomTransform(parent))
+);
+
+const zoomTransform = (parent) => () => {
+  parent.attr('transform', d3.event.transform);
+};
+
 export const showTooltip = (tooltip, title, text, hiddenStyles) => {
   tooltip
     .classed(hiddenStyles, false)

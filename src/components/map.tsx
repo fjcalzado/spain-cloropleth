@@ -40,9 +40,10 @@ export class Elections extends React.Component<Props> {
 
   showTooltip = (d) => {
     const id = d.properties.NATCODE;
+    const title = d.properties.NAMEUNIT;
     const party = resultsData.get(id);
     const partyLabel = party ? party : 'N/A';
-    MapHelper.showTooltip(this.tooltip, d.properties.NAMEUNIT, partyLabel, classNames.hidden);
+    MapHelper.showTooltip(this.tooltip, title, partyLabel, classNames.hidden);
   }
 
   hideTooltip = () => {
@@ -55,23 +56,23 @@ export class Elections extends React.Component<Props> {
     });
   }
 
+  zoomTransform = (parent) => () => {
+    parent.attr('transform', d3.event.transform);
+  }
+
   buildSvg = () => {
     this.container = d3.select('#chart');
-
-    this.zoom = d3.zoom()
-      .scaleExtent([1 / 4, 9])
-      .on('zoom', function () {
-        const g = d3.select('g');
-        g.attr('transform', d3.event.transform);
-      });
 
     this.svg = this.container
       .append('svg')
       .attr('width', this.props.width)
-      .attr('height', this.props.height)
-      .call(this.zoom);
+      .attr('height', this.props.height);
 
     this.g = this.svg.append('g');
+
+    this.zoom = MapHelper.buildZoom(this.g);
+
+    this.svg.call(this.zoom);
 
     this.tooltip = MapHelper.buildTooltip(this.container, classNames.tooltip, classNames.hidden);
 
