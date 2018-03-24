@@ -9,7 +9,7 @@ export const PageAComponent: React.StatelessComponent = (props) => (
     <h1>Spain Elections</h1>
     <Elections
       height={'500px'}
-      width={'90%'}
+      width={'100%'}
     />
   </div>
 );
