@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import { geoConicConformalSpain } from 'd3-composite-projections';
 import { feature } from 'topojson-client';
 import { presimplify as topojsonPresimplify } from 'topojson-simplify';
+import * as MapHelper from './map.helpers';
 
 const classNames = require('./map.scss');
 
@@ -31,6 +32,7 @@ export class Elections extends React.Component<Props> {
   private g;
   private tooltip;
   private zoom;
+  private container;
 
   constructor(props) {
     super(props);
@@ -40,30 +42,22 @@ export class Elections extends React.Component<Props> {
     const id = d.properties.NATCODE;
     const party = resultsData.get(id);
     const partyLabel = party ? party : 'N/A';
-
-    this.tooltip.classed(classNames.hidden, false)
-      .attr('style', 'left:' + (d3.event.clientX + 10) + 'px; top:' + (d3.event.clientY - 10) + 'px')
-      .html(
-        `<div>
-          <span> ${d.properties.NAMEUNIT} </span>
-          <br />
-          <span> ${partyLabel} </span>
-        </div>`,
-    );
+    MapHelper.showTooltip(this.tooltip, d.properties.NAMEUNIT, partyLabel, classNames.hidden);
   }
 
   hideTooltip = () => {
-    this.tooltip.classed(classNames.hidden, true);
+    MapHelper.hideTooltip(this.tooltip, classNames.hidden);
   }
 
   loadResources = () => {
-    console.log("stop");
     resultsTsv.forEach((d) => {
       resultsData.set(d.id, d.party);
     });
   }
 
   buildSvg = () => {
+    this.container = d3.select('#chart');
+
     this.zoom = d3.zoom()
       .scaleExtent([1 / 4, 9])
       .on('zoom', function () {
@@ -71,7 +65,7 @@ export class Elections extends React.Component<Props> {
         g.attr('transform', d3.event.transform);
       });
 
-    this.svg = d3.select('#chart')
+    this.svg = this.container
       .append('svg')
       .attr('width', this.props.width)
       .attr('height', this.props.height)
@@ -79,7 +73,8 @@ export class Elections extends React.Component<Props> {
 
     this.g = this.svg.append('g');
 
-    this.tooltip = d3.select('#chart').append('div').attr('class', `${classNames.tooltip} ${classNames.hidden}`);
+    this.tooltip = MapHelper.buildTooltip(this.container, classNames.tooltip, classNames.hidden);
+
   }
 
   drawMap = (geoMunicipalities, geoRegions) => {
