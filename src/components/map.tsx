@@ -38,16 +38,31 @@ export class Elections extends React.Component<Props> {
     super(props);
   }
 
+  initialize = () => {
+    this.container = d3.select('#chart');
+
+    this.svg = this.container
+      .append('svg')
+      .attr('width', this.props.width)
+      .attr('height', this.props.height);
+
+    this.g = this.svg.append('g');
+
+    this.zoom = MapHelper.buildZoom(this.g);
+    this.svg.call(this.zoom);
+    this.tooltip = MapHelper.buildTooltip(this.container);
+  }
+
   showTooltip = (d) => {
     const id = d.properties.NATCODE;
     const title = d.properties.NAMEUNIT;
     const party = resultsData.get(id);
-    const partyLabel = party ? party : 'N/A';
-    MapHelper.showTooltip(this.tooltip, title, partyLabel, classNames.hidden);
+    const content = party ? party : 'N/A';
+    MapHelper.showTooltip(this.tooltip, title, content);
   }
 
   hideTooltip = () => {
-    MapHelper.hideTooltip(this.tooltip, classNames.hidden);
+    MapHelper.hideTooltip(this.tooltip);
   }
 
   loadResources = () => {
@@ -60,52 +75,15 @@ export class Elections extends React.Component<Props> {
     parent.attr('transform', d3.event.transform);
   }
 
-  buildSvg = () => {
-    this.container = d3.select('#chart');
-
-    this.svg = this.container
-      .append('svg')
-      .attr('width', this.props.width)
-      .attr('height', this.props.height);
-
-    this.g = this.svg.append('g');
-
-    this.zoom = MapHelper.buildZoom(this.g);
-
-    this.svg.call(this.zoom);
-
-    this.tooltip = MapHelper.buildTooltip(this.container, classNames.tooltip, classNames.hidden);
-
-  }
-
   drawMap = (geoMunicipalities, geoRegions) => {
 
     topojsonPresimplify(geoMunicipalities);
     topojsonPresimplify(geoRegions);
 
-    // Draw municipality boundaries
-    const municipalies = feature(geoMunicipalities, geoMunicipalities.objects.municipalities);
-    this.g.selectAll('path').data(municipalies.features)
-      .enter()
-      .append('path')
-      .attr('fill', function(d) {
-        const id = d.properties.NATCODE;
-        const party = resultsData.get(id);
-        return resultsColorScheme.get(party);
-      })
-      .attr('d', path)
-      .attr('class', classNames.municipalityBoundary)
-      .on('mousemove', this.showTooltip)
-      .on('mouseout', this.hideTooltip);
-
-    // Draw region boundaries
-    const regions = feature(geoRegions, geoRegions.objects.ESP_adm1);
-    this.g.selectAll('.region')
-      .data(regions.features)
-      .enter()
-      .append('path')
-      .attr('d', path)
-      .attr('class', classNames.regionBoundary);
+    MapHelper.drawMunicipalities(geoMunicipalities, path, resultsData, resultsColorScheme, this.g)
+    .on('mousemove', this.showTooltip)
+    .on('mouseout', this.hideTooltip);
+    MapHelper.drawRegionBorder(geoRegions, path, this.g);
   }
 
   shouldComponentUpdate() {
@@ -113,7 +91,7 @@ export class Elections extends React.Component<Props> {
   }
 
   componentDidMount() {
-    this.buildSvg();
+    this.initialize();
     this.loadResources();
     this.drawMap(municipalitiesdata, regionsdata);
   }
