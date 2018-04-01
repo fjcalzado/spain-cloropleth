@@ -3,7 +3,9 @@ import * as d3 from 'd3';
 import { geoConicConformalSpain } from 'd3-composite-projections';
 import { feature } from 'topojson-client';
 import { presimplify as topojsonPresimplify } from 'topojson-simplify';
-import * as MapHelper from './map.helpers';
+import { buildTooltip, buildZoom, showTooltip, hideTooltip } from './map.helpers';
+import { drawMunicipalities, drawRegionBorder } from './map.draw';
+import { loadJson } from './map.rest-api';
 
 const classNames = require('./map.scss');
 
@@ -26,7 +28,7 @@ const projection = geoConicConformalSpain();
 const path = d3.geoPath().projection(projection);
 const resultsData = d3.map();
 
-export class Elections extends React.Component<Props> {
+export class ElectionsMap extends React.Component<Props> {
 
   private svg;
   private g;
@@ -41,16 +43,18 @@ export class Elections extends React.Component<Props> {
   initialize = () => {
     this.container = d3.select('#chart');
 
+    // SVG container
     this.svg = this.container
       .append('svg')
       .attr('width', this.props.width)
       .attr('height', this.props.height);
 
+    // Group of elements, all transformations will be applied to all its children
     this.g = this.svg.append('g');
 
-    this.zoom = MapHelper.buildZoom(this.g);
+    this.zoom = buildZoom(this.g);
     this.svg.call(this.zoom);
-    this.tooltip = MapHelper.buildTooltip(this.container);
+    this.tooltip = buildTooltip(this.container);
   }
 
   showTooltip = (d) => {
@@ -58,11 +62,11 @@ export class Elections extends React.Component<Props> {
     const title = d.properties.NAMEUNIT;
     const party = resultsData.get(id);
     const content = party ? party : 'N/A';
-    MapHelper.showTooltip(this.tooltip, title, content);
+    showTooltip(this.tooltip, title, content);
   }
 
   hideTooltip = () => {
-    MapHelper.hideTooltip(this.tooltip);
+    hideTooltip(this.tooltip);
   }
 
   loadResources = () => {
@@ -76,17 +80,17 @@ export class Elections extends React.Component<Props> {
   }
 
   drawMap = (geoMunicipalities, geoRegions) => {
-
     topojsonPresimplify(geoMunicipalities);
     topojsonPresimplify(geoRegions);
 
-    MapHelper.drawMunicipalities(geoMunicipalities, path, resultsData, resultsColorScheme, this.g)
-    .on('mousemove', this.showTooltip)
-    .on('mouseout', this.hideTooltip);
-    MapHelper.drawRegionBorder(geoRegions, path, this.g);
+    drawMunicipalities(geoMunicipalities, path, resultsData, resultsColorScheme, this.g)
+      .on('mousemove', this.showTooltip)
+      .on('mouseout', this.hideTooltip);
+    drawRegionBorder(geoRegions, path, this.g);
   }
 
   shouldComponentUpdate() {
+    // D3js has all the responsability to render
     return false;
   }
 
