@@ -24,7 +24,7 @@ export class ElectionsMap extends React.Component<Props> {
   private tooltip;
   private zoom;
 
-  private resultsTsv;
+  private electionResults;
   private municipalitiesdata;
   private regionsdata;
   private colorScheme;
@@ -63,12 +63,12 @@ export class ElectionsMap extends React.Component<Props> {
   }
 
   loadResources = () => {
-    this.resultsTsv = loadElectionsData();
+    this.electionResults = loadElectionsData();
     this.municipalitiesdata = loadMunicipalities();
     this.regionsdata = loadRegions();
     this.colorScheme = loadColorScheme();
 
-    this.resultsTsv.forEach((d) => {
+    this.electionResults.forEach((d) => {
       resultsData.set(d.id, d.party);
     });
   }

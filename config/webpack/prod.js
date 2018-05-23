@@ -1,20 +1,20 @@
-const webpack = require('webpack');
-const merge = require('webpack-merge');
-const base = require('./base');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const helpers = require('../helpers');
+const webpack = require("webpack");
+const merge = require("webpack-merge");
+const base = require("./base");
+const helpers = require("../helpers");
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 module.exports = merge(base, {
+  mode: "production",
+  devtool: "none",
   output: {
-    path: helpers.resolveFromRootPath('dist'),
-    filename: '[chunkhash].[name].js',
+    path: helpers.resolveFromRootPath("dist"),
+    filename: "[chunkhash].[name].js",
   },
   plugins: [
     new webpack.HashedModuleIdsPlugin(),
-    new ExtractTextPlugin({
-      filename: '[chunkhash].[name].css',
-      disable: false,
-      allChunks: true,
+    new BundleAnalyzerPlugin({
+      analyzerMode: "static",
     }),
   ],
 });

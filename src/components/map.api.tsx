@@ -1,6 +1,6 @@
-const municipalitiesdata = require('../content/data/spain-municipalities.json');
-const regionsdata = require('../content/data/spain-comunidad.json');
-const resultsTsv = require('../content/data/results-fake.tsv');
+const municipalitiesdata = require('../data/geo/spain-municipalities.json');
+const regionsdata = require('../data/geo/spain-communities.json');
+const electionResults = require('../data/mock/election-result.json');
 
 export const loadJson = (filePath: string) => {
   fetch(filePath)
@@ -19,7 +19,7 @@ export const loadRegions = () => {
 };
 
 export const loadElectionsData = () => {
-  return resultsTsv;
+  return electionResults;
 };
 
 const resultsColorScheme = new Map();
