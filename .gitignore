@@ -6,3 +6,4 @@ bundle.js
 package-lock.json
 .awcache
 desktop.ini
+dist/

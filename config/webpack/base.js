@@ -79,14 +79,14 @@ module.exports = {
           name: "vendor",
           enforce: true,
         },
-        electionGroup: {
+        mockGroup: {
           test: /[\\/]data[\\/]mock[\\/]/,
-          name: "election",
+          name: "mock.data",
           enforce: true,
         },
         geoGroup: {
           test: /[\\/]data[\\/]geo[\\/]/,
-          name: "geo",
+          name: "geo.data",
           enforce: true,
         },
       },
@@ -97,7 +97,7 @@ module.exports = {
       filename: 'index.html',
       template: 'index.html',
       hash: true,
-      chunks: ['manifest', 'vendor', 'mockData', 'geo', 'app', 'appStyles'],
+      chunks: ['manifest', 'vendor', 'mock.data', 'geo.data', 'app', 'appStyles'],
       chunksSortMode: 'manual',
     }),
     new webpack.DefinePlugin({
@@ -109,4 +109,3 @@ module.exports = {
     }),
   ],
 }
-console.log(JSON.stringify(process.env.NODE_ENV), JSON.stringify(process.env.REST_ENV), JSON.stringify(process.env.BASE_API_URL))
