@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 
-const classNames = require('./map.scss');
+const classNames = require('./map.style.scss');
 
 export const buildTooltip = (parent) => (
   parent

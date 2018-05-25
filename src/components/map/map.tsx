@@ -7,7 +7,7 @@ import { buildTooltip, buildZoom, showTooltip, hideTooltip } from './map.helpers
 import { drawMunicipalities, drawRegionBorder } from './map.draw';
 import { loadElectionsData, loadMunicipalities, loadRegions, loadColorScheme } from './map.api';
 
-const classNames = require('./map.scss');
+const classNames = require('./map.style.scss');
 
 interface Props {
   width: string;

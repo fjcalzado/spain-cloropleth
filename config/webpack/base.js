@@ -1,6 +1,5 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const helpers = require('../helpers');
 
 const srcPath = helpers.resolveFromRootPath('src');
@@ -9,7 +8,7 @@ module.exports = {
   context: srcPath,
   entry: {
     app: [
-      './index.tsx',
+      './app.tsx',
     ],
     appStyles: [
       './styles/_base.scss',
@@ -26,11 +25,7 @@ module.exports = {
       {
         test: /\.tsx?$/,
         exclude: '/node_modules/',
-        loader: 'awesome-typescript-loader',
-        options: {
-          useBabel: true,
-          useCache: true,
-        },
+        loader: 'ts-loader',
       },
       {
         test: /\.scss$/,

@@ -1,8 +1,14 @@
 .container {
-  align-self: center;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-  background-color: black;
-  width: 100%;
+  align-items: center;
+}
+
+.nut-boundary {
+  stroke: black;
+  stroke-width: 0.1px;
+  fill: none;
 }
 
 .municipality-boundary {

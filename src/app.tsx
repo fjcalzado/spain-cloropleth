@@ -1,7 +1,8 @@
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import { AppRouter } from './router';
 
-export const App: React.StatelessComponent = (props) => (
-  <div>
-    {props.children}
-  </div>
+ReactDOM.render(
+  <AppRouter />,
+  document.getElementById('root'),
 );
