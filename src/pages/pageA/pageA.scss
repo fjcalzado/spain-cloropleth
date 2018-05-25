@@ -1,6 +1,22 @@
 .page-a{
   display: flex;
   flex-direction: column;
-  width: 100%;
+  justify-content: flex-start;
   margin: auto;
+}
+
+.header {
+  text-align: center;
+  margin: 2rem 0.5rem 1rem;
+}
+
+.card-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  margin: 1rem 2rem;
+  box-shadow: 0 0 15px darkgrey;
+  border-radius: 1rem;
 }

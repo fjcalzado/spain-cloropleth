@@ -4,18 +4,20 @@ import { ElectionsMap } from '../../components/map/map';
 import { MapComponent } from '../../components/map';
 import { getNutFeatures } from '../../api/geo';
 
-const classNames = require('./pageA.scss');
+const style = require('./pageA.scss');
 
 export const PageAComponent: React.StatelessComponent = (props) => (
-  <div className={classNames.pageA}>
-    <h1>Spain Elections</h1>
+  <div className={style.pageA}>
+    <h1 className={style.header}>Spain Elections</h1>
     {/* <ElectionsMap
       height={'500px'}
       width={'100%'}
     /> */}
-    <MapComponent
-      nutFeatures={getNutFeatures(3)}
-      data={null}
-    />
+    <div className={style.cardContainer}>
+      <MapComponent
+        nutFeatures={getNutFeatures(3)}
+        data={null}
+      />
+    </div>
   </div>
 );

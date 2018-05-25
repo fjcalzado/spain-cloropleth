@@ -24,9 +24,9 @@ export const CreateMapAPI = (): MapAPI => {
   const createMap = (rootNode: Element, nutFeatureCollection: FeatureCollection<GeometryObject>) => {
     svg = d3.select(rootNode)
       .append('svg')
-        .attr('width', width)
-        .attr('height', height)
-        .attr('viewbox', `0 0 ${width}px ${height}px`)
+        // .attr('width', width)
+        // .attr('height', height)
+        .attr('viewBox', `0 0 ${width} ${height}`)
         .attr('class', style.svgContainer);
 
     zoomGroup = svg
