@@ -1,8 +1,9 @@
 import { select, selectAll } from 'd3-selection';
 import { geoPath } from 'd3-geo';
-import { geoConicConformalSpain } from 'd3-composite-projections';
+
 import { GeometryObject, FeatureCollection } from 'geojson';
 import { feature } from 'topojson-client';
+import { MapSetup, defaultMapSetup } from './map.setup';
 const d3 = { select, selectAll, geoPath };
 
 const style = require('./map.style.scss');
@@ -11,11 +12,9 @@ export interface MapAPI {
   createMap: (rootNode: Element, nutFeatureCollection: FeatureCollection<GeometryObject>) => void;
 }
 
-export const CreateMapAPI = (): MapAPI => {
-  const width = 700;  // TODO. Given as input.
-  const height = 500; // TODO. Given as input.
-  const padding = 20; // TODO. Given as input.
-  const extent = [[padding, padding], [width - padding, height - padding]];
+export const CreateMapAPI = (mapSetup: MapSetup = defaultMapSetup): MapAPI => {
+  const extent = [[mapSetup.internalPadding, mapSetup.internalPadding],
+    [mapSetup.width - mapSetup.internalPadding, mapSetup.height - mapSetup.internalPadding]];
 
   let svg = null;
   let zoomGroup = null;
@@ -24,9 +23,9 @@ export const CreateMapAPI = (): MapAPI => {
   const createMap = (rootNode: Element, nutFeatureCollection: FeatureCollection<GeometryObject>) => {
     svg = d3.select(rootNode)
       .append('svg')
-        // .attr('width', width)
-        // .attr('height', height)
-        .attr('viewBox', `0 0 ${width} ${height}`)
+        // .attr('width', mapSetup.width)
+        // .attr('height', mapSetup.height)
+        .attr('viewBox', `0 0 ${mapSetup.width} ${mapSetup.height}`)
         .attr('class', style.svgContainer);
 
     zoomGroup = svg
@@ -35,14 +34,14 @@ export const CreateMapAPI = (): MapAPI => {
     nutSelection = zoomGroup.selectAll('path')
       .data(nutFeatureCollection.features);
 
-    // TODO to be moved outside.
-    const geoPathGenerator = d3.geoPath(geoConicConformalSpain().fitExtent(extent, nutFeatureCollection));
-
     nutSelection.enter()
       .append('path')
         .attr('class', style.nutBoundary)
-        .attr('d', geoPathGenerator);
+        .attr('d', geoPathGenerator(nutFeatureCollection));
   };
+
+  const geoPathGenerator = (nutFeatureCollection: FeatureCollection<GeometryObject>) =>
+    d3.geoPath(mapSetup.projection.fitExtent(extent, nutFeatureCollection));
 
   return {
     createMap,
