@@ -1,3 +1,3 @@
-export { Data } from './model';
+export { DataAPI } from './model';
 export { getElectionData } from './election.spain';
 

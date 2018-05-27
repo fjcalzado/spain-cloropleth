@@ -1,7 +1,7 @@
-export interface Data<D = any> {
+export interface DataAPI<D = any> {
   dataCollection: Array<D>;
-  key: (datum: D) => any;
-  name: (datum: D) => string;
+  getKey: (datum: D) => any;
+  getName: (datum: D) => string;
 }
 
-export type DataAPI<D> = () => Data<D>;
+export type DataAPICreator<D> = () => DataAPI<D>;

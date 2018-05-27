@@ -1,2 +1,2 @@
 export { getNuts } from './nuts.spain';
-export { Nuts, NutsApi } from './model';
+export { NutsAPI, NutsAPICreator } from './model';

@@ -1,4 +1,4 @@
-import { DataAPI } from "./model";
+import { DataAPI, DataAPICreator } from "./model";
 
 const electionsJSON = require('../../data/mock/election-result.json');
 
@@ -10,10 +10,10 @@ interface ElectionDatum {
   party: string;
 }
 
-export const getElectionData: DataAPI<ElectionDatum> = () => {
+export const getElectionData: DataAPICreator<ElectionDatum> = () => {
   return {
     dataCollection: electionsJSON,
-    key: (datum) => datum.id,
-    name: (datum) => datum.name,
+    getKey: (datum) => datum.id,
+    getName: (datum) => datum.name,
   };
 }

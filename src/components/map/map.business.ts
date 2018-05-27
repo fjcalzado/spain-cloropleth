@@ -2,21 +2,21 @@ import { select, selectAll, mouse } from 'd3-selection';
 import { geoPath } from 'd3-geo';
 import { GeometryObject, Feature } from 'geojson';
 import { MapSetup, defaultMapSetup } from './map.setup';
-import { Nuts } from '../../api/geo';
-import { Data } from '../../api/data';
+import { NutsAPI } from '../../api/geo';
+import { DataAPI } from '../../api/data';
 import { cnc } from '../../utils/classname';
 const d3 = { select, selectAll, mouse, geoPath };
 
 const style = require('./map.style.scss');
 
 export interface MapAPI {
-  createMap: (rootNode: Element, nuts: Nuts, data: Data) => void;
+  createMap: (rootNode: Element, nutsApi: NutsAPI, dataApi: DataAPI) => void;
 }
 
 interface MergedNutData {
   key: any;
   nut: Feature<GeometryObject, any>;
-  datum: any;
+  data: any;
 }
 
 export const CreateMapAPI = (mapSetup: MapSetup = defaultMapSetup): MapAPI => {
@@ -27,7 +27,7 @@ export const CreateMapAPI = (mapSetup: MapSetup = defaultMapSetup): MapAPI => {
   let zoomGroup = null;
   let tooltip = null;
 
-  const createMap = (rootNode: Element, nuts: Nuts, data: Data) => {
+  const createMap = (rootNode: Element, nutsApi: NutsAPI, dataApi: DataAPI) => {
     svg = d3.select(rootNode)
       .append('svg')
         .attr('class', style.svgContainer)
@@ -39,13 +39,13 @@ export const CreateMapAPI = (mapSetup: MapSetup = defaultMapSetup): MapAPI => {
       .append('g')
         .attr('class', 'zoom');
 
-    enter(nuts, data);
+    enter(nutsApi, dataApi);
   };
 
   // Enter() Pattern.
-  const enter = (nuts: Nuts, data: Data) => {
-    const mergedNutsData = mergeNutsAndData(nuts, data);
-    const geoPathGenerator = d3.geoPath(mapSetup.projection.fitExtent(extent, nuts.featureCollection));
+  const enter = (nutsApi: NutsAPI, dataApi: DataAPI) => {
+    const mergedNutsData = mergeNutsAndData(nutsApi, dataApi);
+    const geoPathGenerator = d3.geoPath(mapSetup.projection.fitExtent(extent, nutsApi.featureCollection));
 
     zoomGroup.selectAll('path')
       .data(mergedNutsData)
@@ -54,7 +54,7 @@ export const CreateMapAPI = (mapSetup: MapSetup = defaultMapSetup): MapAPI => {
         .attr('class', style.nut)
         .attr('d', d => geoPathGenerator(d.nut))
         .attr('fill', 'white')
-        .on('mouseenter', showTooltip(tooltip, nuts, data))
+        .on('mouseenter', showTooltip(tooltip, nutsApi, dataApi))
         .on('mousemove', updateTooltipPosition(tooltip))
         .on('mouseleave', hideTooltip(tooltip));
   };
@@ -67,16 +67,16 @@ export const CreateMapAPI = (mapSetup: MapSetup = defaultMapSetup): MapAPI => {
 
 // TODO. To be encapsulated apart.
 
-const mergeNutsAndData = (nuts: Nuts, data: Data) => {
-  const nutArray = nuts.featureCollection.features;
-  const dataArray = data.dataCollection;
-console.log(dataArray)
+const mergeNutsAndData = (nutsApi: NutsAPI, dataApi: DataAPI): MergedNutData[] => {
+  const nutArray = nutsApi.featureCollection.features;
+  const dataArray = dataApi.dataCollection;
+
   return nutArray.map(nut => {
-    const key = nuts.key(nut);
+    const key = nutsApi.key(nut);
     return {
       key,
       nut,
-      datum: dataArray.find(d => data.key(d) === key),
+      data: dataArray.find(d => dataApi.getKey(d) === key),
     }
   });
 }
@@ -87,14 +87,14 @@ const createTooltip = (node: Element) => {
       .attr('class', cnc(style.tooltip, style.hidden));
 };
 
-const showTooltip = (tooltip, nuts: Nuts, data: Data) => (mergedNutData) => {
+const showTooltip = (tooltip, nuts: NutsAPI, data: DataAPI) => (mergedNutData: MergedNutData) => {
   tooltip.html(
     `
     <h4>From NUTS:</h4>
     <p>${nuts.name(mergedNutData.nut)}</p>
     <p>${nuts.key(mergedNutData.nut)}</p>
     <h4>From DATA:</h4>
-    <p>${data.name(mergedNutData.datum)}</p>
+    <p>${data.getName(mergedNutData.data)}</p>
     `
   );
   updateTooltipPosition(tooltip);

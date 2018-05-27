@@ -2,7 +2,7 @@ import { TopoJSON, Topology, GeometryCollection, GeometryObject } from 'topojson
 import { presimplify } from 'topojson-simplify';
 import { FeatureCollection, Feature } from 'geojson';
 import { extractFeaturesFromGeoJSON } from './util';
-import { Nuts, NutsApi } from './model';
+import { NutsAPI, NutsAPICreator } from './model';
 
 const communitiesGeoJSON = require('../../data/geo/Spain-01-Regions.MIN.topo.json');
 const provincesGeoJSON = require('../../data/geo/Spain-02-Provinces.MIN.topo.json');
@@ -39,7 +39,7 @@ interface FeatureProperties {
   NAMEUNIT: string;
 }
 
-export const getNuts: NutsApi<FeatureProperties> = (level: number, simplify: boolean = false) => {
+export const getNuts: NutsAPICreator<FeatureProperties> = (level: number, simplify: boolean = false) => {
   const descriptor = resolveLevel(level);
   const geoJSON = simplify ? presimplify(descriptor.geoJSON) : descriptor.geoJSON;
   const collection = geoJSON.objects[descriptor.collectionAccessor] as GeometryCollection;

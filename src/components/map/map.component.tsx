@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { CreateMapAPI, MapAPI } from './map.business';
 import { GeometryObject, FeatureCollection } from 'geojson';
-import { Nuts } from '../../api/geo';
-import { Data } from '../../api/data';
+import { NutsAPI } from '../../api/geo';
+import { DataAPI } from '../../api/data';
 
 const style = require('./map.style.scss');
 
 export interface MapProps {
-  nuts: Nuts;
-  data: Data;
+  nuts: NutsAPI;
+  data: DataAPI;
 }
 
 interface MapState {
