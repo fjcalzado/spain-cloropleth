@@ -1,4 +1,6 @@
-.page-a{
+.display-map-container{
+  width: 100vw;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -7,16 +9,18 @@
 
 .header {
   text-align: center;
-  margin: 2rem 0.5rem 1rem;
+  margin: 2rem 1rem 0 1rem;
 }
 
 .card-container {
+  flex-grow: 1;
+  flex-shrink: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 2rem;
-  margin: 1rem 2rem;
+  margin: 2rem 2rem;
   box-shadow: 0 0 15px darkgrey;
   border-radius: 1rem;
 }

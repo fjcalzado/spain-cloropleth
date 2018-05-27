@@ -4,10 +4,10 @@ import { ElectionsMap } from '../../components/map/map';
 import { MapComponent } from '../../components/map';
 import { getNutFeatures } from '../../api/geo';
 
-const style = require('./pageA.scss');
+const style = require('./display-map.style.scss');
 
-export const PageAComponent: React.StatelessComponent = (props) => (
-  <div className={style.pageA}>
+export const DisplayMapComponent: React.StatelessComponent = (props) => (
+  <div className={style.displayMapContainer}>
     <h1 className={style.header}>Spain Elections</h1>
     {/* <ElectionsMap
       height={'500px'}
