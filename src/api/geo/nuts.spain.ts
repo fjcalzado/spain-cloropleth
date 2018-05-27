@@ -1,6 +1,6 @@
 import { TopoJSON, Topology, GeometryCollection, GeometryObject } from 'topojson-specification';
 import { presimplify } from 'topojson-simplify';
-import { FeatureCollection } from 'geojson';
+import { FeatureCollection, Feature } from 'geojson';
 import { extractFeaturesFromGeoJSON } from './util';
 import { Nuts, NutsApi } from './model';
 
@@ -39,17 +39,17 @@ interface FeatureProperties {
   NAMEUNIT: string;
 }
 
-export const getNuts: NutsApi = (level: number, simplify: boolean = false): Nuts => {
+export const getNuts: NutsApi<FeatureProperties> = (level: number, simplify: boolean = false) => {
   const descriptor = resolveLevel(level);
   const geoJSON = simplify ? presimplify(descriptor.geoJSON) : descriptor.geoJSON;
   const collection = geoJSON.objects[descriptor.collectionAccessor] as GeometryCollection;
   const featureCollection = extractFeaturesFromGeoJSON(geoJSON, collection);
   return {
     featureCollection,
-    key: (feature: GeometryObject<FeatureProperties>) => {
-      return (feature.properties as FeatureProperties).NATCODE;
+    key: (feature) => {
+      return parseInt((feature.properties as FeatureProperties).NATCODE);
     },
-    name: (feature: GeometryObject<FeatureProperties>) => {
+    name: (feature: Feature<GeometryObject, FeatureProperties>) => {
       return (feature.properties as FeatureProperties).NAMEUNIT;
     },
   };

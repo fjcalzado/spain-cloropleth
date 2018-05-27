@@ -2,12 +2,13 @@ import * as React from 'react';
 import { CreateMapAPI, MapAPI } from './map.business';
 import { GeometryObject, FeatureCollection } from 'geojson';
 import { Nuts } from '../../api/geo';
+import { Data } from '../../api/data';
 
 const style = require('./map.style.scss');
 
 export interface MapProps {
   nuts: Nuts;
-  data?: any[];
+  data: Data;
 }
 
 interface MapState {
@@ -30,7 +31,7 @@ export class MapComponent extends React.Component<MapProps, MapState> {
   }
 
   public componentDidMount() {
-    this.state.mapApi.createMap(this.containerRef, this.props.nuts);
+    this.state.mapApi.createMap(this.containerRef, this.props.nuts, this.props.data);
   }
 
   public shouldComponentUpdate() {

@@ -16,8 +16,10 @@
   position: fixed;
   pointer-events: none;
   color: white;
-  background-color: darkgray;
-  opacity: 0.8;
+  background-color: #3a3a3a;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  opacity: 0.9;
 
   &.hidden {
     opacity: 0;
@@ -40,16 +42,16 @@
   display: none;
 }
 
-div.tooltip {
-  background-color: lightgrey;
-  color: black;
-  padding: 2px;
-  text-shadow: #f5f5f5 0 1px 0;
-  font-size: 12px;
-  border: 1px solid;
-  border-color: grey;
-  border-radius: 2px;
-  opacity: 0.95;
-  position: absolute;
-  box-shadow: rgba(0, 0, 0, 0.3) 0 2px 10px;
-}
+// div.tooltip {
+//   background-color: lightgrey;
+//   color: black;
+//   padding: 2px;
+//   text-shadow: #f5f5f5 0 1px 0;
+//   font-size: 12px;
+//   border: 1px solid;
+//   border-color: grey;
+//   border-radius: 2px;
+//   opacity: 0.95;
+//   position: absolute;
+//   box-shadow: rgba(0, 0, 0, 0.3) 0 2px 10px;
+// }

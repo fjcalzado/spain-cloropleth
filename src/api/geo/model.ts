@@ -1,9 +1,9 @@
-import { FeatureCollection, GeometryObject } from 'geojson';
+import { FeatureCollection, GeometryObject, Feature, GeoJsonProperties } from 'geojson';
 
-export interface Nuts {
+export interface Nuts<P = GeoJsonProperties> {
   featureCollection: FeatureCollection<GeometryObject>;
-  key: (feature: GeometryObject) => any;
-  name: (feature: GeometryObject) => string;
+  key: (feature: Feature<GeometryObject, P>) => any;
+  name: (feature: Feature<GeometryObject, P>) => string;
 }
 
-export type NutsApi = (level: number, simplify?: boolean) => Nuts;
+export type NutsApi<P> = (level: number, simplify?: boolean) => Nuts<P>;
