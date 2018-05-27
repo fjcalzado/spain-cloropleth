@@ -3,9 +3,9 @@ import * as d3 from 'd3';
 import { geoConicConformalSpain } from 'd3-composite-projections';
 import { feature } from 'topojson-client';
 import { presimplify as topojsonPresimplify } from 'topojson-simplify';
-import { buildTooltip, buildZoom, showTooltip, hideTooltip } from './map.helpers';
-import { drawMunicipalities, drawRegionBorder } from './map.draw';
-import { loadElectionsData, loadMunicipalities, loadRegions, loadColorScheme } from './map.api';
+import { buildTooltip, buildZoom, showTooltip, hideTooltip } from './DEPRECATED.map.helpers';
+import { drawMunicipalities, drawRegionBorder } from './DEPRECATED.map.draw';
+import { loadElectionsData, loadMunicipalities, loadRegions, loadColorScheme } from './DEPRECATED.map.api';
 
 const classNames = require('./map.style.scss');
 

@@ -7,11 +7,23 @@
   height: 100%;
 }
 
-.nut-boundary {
+.nut {
   stroke: black;
   stroke-width: 0.1px;
-  fill: none;
 }
+
+.tooltip {
+  position: fixed;
+  pointer-events: none;
+  color: white;
+  background-color: darkgray;
+  opacity: 0.8;
+
+  &.hidden {
+    opacity: 0;
+  }
+}
+
 
 .municipality-boundary {
   stroke: white;
