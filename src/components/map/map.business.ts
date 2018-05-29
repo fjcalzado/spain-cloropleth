@@ -33,7 +33,9 @@ export const CreateMapAPI = (mapSetup: MapSetup = defaultMapSetup): MapAPI => {
         .attr('class', style.svgContainer)
         .attr('viewBox', `0 0 ${mapSetup.width} ${mapSetup.height}`);
 
-    tooltip = createTooltip(rootNode);
+    if (dataApi.getTooltipContent) {
+      tooltip = createTooltip(rootNode);
+    }
 
     zoomGroup = svg
       .append('g')
@@ -47,13 +49,17 @@ export const CreateMapAPI = (mapSetup: MapSetup = defaultMapSetup): MapAPI => {
     const mergedNutsData = mergeNutsAndData(nutsApi, dataApi);
     const geoPathGenerator = d3.geoPath(mapSetup.projection.fitExtent(extent, nutsApi.featureCollection));
 
+    const getGeoPath = (datum: MergedNutData) => geoPathGenerator(datum.nut);
+    const getColor = dataApi.getColor ?
+      ((datum: MergedNutData) => (dataApi.getColor(datum.data))) : () => 'white';
+
     zoomGroup.selectAll('path')
       .data(mergedNutsData)
       .enter()
       .append('path')
         .attr('class', style.nut)
-        .attr('d', d => geoPathGenerator(d.nut))
-        .attr('fill', 'white')
+        .attr('d', getGeoPath)
+        .attr('fill', getColor)
         .on('mouseenter', showTooltip(tooltip, nutsApi, dataApi))
         .on('mousemove', updateTooltipPosition(tooltip))
         .on('mouseleave', hideTooltip(tooltip));
@@ -88,27 +94,23 @@ const createTooltip = (node: Element) => {
 };
 
 const showTooltip = (tooltip, nuts: NutsAPI, data: DataAPI) => (mergedNutData: MergedNutData) => {
-  tooltip.html(
-    `
-    <h4>From NUTS:</h4>
-    <p>${nuts.name(mergedNutData.nut)}</p>
-    <p>${nuts.key(mergedNutData.nut)}</p>
-    <h4>From DATA:</h4>
-    <p>${data.getName(mergedNutData.data)}</p>
-    `
-  );
-  updateTooltipPosition(tooltip);
-  tooltip.classed(style.hidden, false);
+  if (tooltip) {
+    tooltip.html(data.getTooltipContent(mergedNutData.data));
+    updateTooltipPosition(tooltip);
+    tooltip.classed(style.hidden, false);
+  }
 };
 
 const hideTooltip = (tooltip) => () => {
-  tooltip.classed(style.hidden, true);
+  if (tooltip) tooltip.classed(style.hidden, true);
 };
 
 const updateTooltipPosition = (tooltip) => () => {
-  const mousePosX = d3.mouse(document.body)[0] + 25;
-  const mousePosY = d3.mouse(document.body)[1] + 40;
-  tooltip
-    .style('left', `${mousePosX}px`)
-    .style('top', `${mousePosY}px`)
+  if (tooltip) {
+    const mousePosX = d3.mouse(document.body)[0] + 25;
+    const mousePosY = d3.mouse(document.body)[1] + 40;
+    tooltip
+      .style('left', `${mousePosX}px`)
+      .style('top', `${mousePosY}px`)
+  }
 };
