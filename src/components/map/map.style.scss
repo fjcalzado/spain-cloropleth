@@ -7,6 +7,10 @@
   height: 100%;
 }
 
+.nut-group {
+  // Entry point.
+}
+
 .nut {
   stroke: black;
   stroke-width: 0.1px;
@@ -19,7 +23,7 @@
   background-color: #3a3a3a;
   padding: 0.5rem;
   border-radius: 0.5rem;
-  opacity: 0.9;
+  opacity: 0.8;
 
   &.hidden {
     opacity: 0;

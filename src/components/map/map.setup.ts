@@ -5,6 +5,7 @@ export interface MapSetup {
   height: number;
   internalPadding: number;
   projection: any;  // TODO. D3 typings are broken (may 18).
+  maxZoomScale: number;
 }
 
 export const defaultMapSetup: MapSetup = {
@@ -12,4 +13,5 @@ export const defaultMapSetup: MapSetup = {
   height: 500,
   internalPadding: 20,
   projection: geoConicConformalSpain(),
+  maxZoomScale: 12,
 };
