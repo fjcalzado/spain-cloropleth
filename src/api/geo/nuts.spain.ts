@@ -1,7 +1,7 @@
 import { TopoJSON, Topology, GeometryCollection, GeometryObject } from 'topojson-specification';
-import { presimplify } from 'topojson-simplify';
 import { FeatureCollection, Feature } from 'geojson';
-import { extractFeaturesFromGeoJSON } from './util';
+import { geoConicConformalSpain } from 'd3-composite-projections';
+import { extractFeaturesFromGeoJSON, extractMeshFromGeoJSON, applySimplify } from './util';
 import { NutsAPI, NutsAPICreator } from './model';
 
 const communitiesGeoJSON = require('../../data/geo/Spain-01-Regions.MIN.topo.json');
@@ -11,6 +11,7 @@ const municipalitiesGeoJSON = require('../../data/geo/Spain-03-Municipalities.MI
 interface GeoJSONDescriptor {
   geoJSON: Topology;
   collectionAccessor: string;
+  simplify?: number;  // Simplify threshold. 0 = no simplification.
 }
 
 const resolveLevel = (level: number): GeoJSONDescriptor => {
@@ -19,6 +20,7 @@ const resolveLevel = (level: number): GeoJSONDescriptor => {
       return {
         geoJSON: municipalitiesGeoJSON,
         collectionAccessor: 'municipalities',
+        simplify: 0.001,
       };
     case 2:
       return {
@@ -39,13 +41,18 @@ interface FeatureProperties {
   NAMEUNIT: string;
 }
 
-export const getNuts: NutsAPICreator<FeatureProperties> = (level: number, simplify: boolean = true) => {
+export const getNuts: NutsAPICreator<FeatureProperties> = (level: number) => {
   const descriptor = resolveLevel(level);
-  const geoJSON = simplify ? presimplify(descriptor.geoJSON) : descriptor.geoJSON;
-  const collection = geoJSON.objects[descriptor.collectionAccessor] as GeometryCollection;
-  const featureCollection = extractFeaturesFromGeoJSON(geoJSON, collection);
+  const geoJSON = applySimplify(descriptor.geoJSON, descriptor.simplify);
+  const geometryCollection = geoJSON.objects[descriptor.collectionAccessor] as GeometryCollection;
+  const featureCollection = extractFeaturesFromGeoJSON(geoJSON, geometryCollection);
+  const mesh = extractMeshFromGeoJSON(geoJSON, geometryCollection);
+  const projection = geoConicConformalSpain();
+
   return {
     featureCollection,
+    mesh,
+    projection,
     key: (feature) => {
       return parseInt((feature.properties as FeatureProperties).NATCODE);
     },
