@@ -8,7 +8,7 @@ const style = require('./map.style.scss');
 
 export interface MapProps {
   nuts: NutsAPI;
-  data: DataAPI;
+  data?: DataAPI;
 }
 
 interface MapState {

@@ -35,6 +35,6 @@ const getColor = (datum: ElectionDatum) => {
     case 'PSOE': return '#ff0000';
     case 'PODEMOS': return '#9a569a';
     case 'CS': return '#fca501';
-    default: return 'white';
+    default: return 'lightgrey';
   }
 };
