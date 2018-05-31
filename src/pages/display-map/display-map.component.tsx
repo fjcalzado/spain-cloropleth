@@ -9,10 +9,10 @@ const style = require('./display-map.style.scss');
 
 export const DisplayMapComponent: React.StatelessComponent = (props) => (
   <div className={style.displayMapContainer}>
-    <h1 className={style.header}>Spain Elections</h1>
+    <h1 className={style.header}>Map Component</h1>
     <div className={style.cardContainer}>
       <MapComponent
-        nuts={getNuts(spainLevel2)}
+        nuts={getNuts(spainLevel3)}
         data={getElectionData()}
       />
     </div>
