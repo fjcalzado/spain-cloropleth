@@ -5,6 +5,13 @@ import {
   GeoJsonProperties,
   MultiLineString
 } from 'geojson';
+import { Topology } from 'topojson-specification';
+
+export interface NutsLevelDescriptor {
+  geoJSON: Topology;
+  collectionAccessor: string;
+  simplify?: number;  // Simplify threshold. 0 = no simplification.
+}
 
 export interface NutsAPI<P = GeoJsonProperties> {
   featureCollection: FeatureCollection<GeometryObject>;
@@ -14,4 +21,4 @@ export interface NutsAPI<P = GeoJsonProperties> {
   name: (feature: Feature<GeometryObject, P>) => string;
 }
 
-export type NutsAPICreator<P> = (level: number, simplify?: boolean) => NutsAPI<P>;
+export type NutsAPICreator<P> = (level: NutsLevelDescriptor) => NutsAPI<P>;
