@@ -24,15 +24,6 @@
 
   .nut {
     cursor: pointer;
-
-     &:hover {
-       stroke: yellow;
-       stroke-width: 0.5px;
-     }
-
-     .zoomed {
-       // Entry point.
-     }
   }
 
   .mesh-group {

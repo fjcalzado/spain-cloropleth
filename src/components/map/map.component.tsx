@@ -1,10 +1,12 @@
 import * as React from 'react';
-import { CreateMapAPI, MapAPI } from './map.business';
+import { MapAPI } from './map.business.model';
+import { CreateMapAPI } from './map.business.core';
 import { GeometryObject, FeatureCollection } from 'geojson';
 import { NutsAPI } from '../../api/geo';
 import { DataAPI } from '../../api/data';
 
 const style = require('./map.style.scss');
+
 
 export interface MapProps {
   nuts: NutsAPI;
