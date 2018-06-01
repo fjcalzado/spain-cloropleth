@@ -1,6 +1,6 @@
 import { DataAPI, DataAPICreator } from "./model";
 
-const electionsJSON = require('../../data/mock/election-result.json');
+const electionsJSON = require('../../data/mock/election-result.spain.json');
 
 interface ElectionDatum {
   id: number;

@@ -4,9 +4,9 @@ import { geoConicConformalSpain } from 'd3-composite-projections';
 import { extractAllFromGeoJSON } from './util';
 import { NutsAPI, NutsAPICreator, NutsLevelDescriptor } from './model';
 
-const communitiesGeoJSON = require('../../data/geo/Spain-01-Regions.MIN.topo.json');
-const provincesGeoJSON = require('../../data/geo/Spain-02-Provinces.MIN.topo.json');
-const municipalitiesGeoJSON = require('../../data/geo/Spain-03-Municipalities.MIN.topo.json');
+const communitiesGeoJSON = require('../../data/geo/Spain-02-Communities.MIN.topo.json');
+const provincesGeoJSON = require('../../data/geo/Spain-03-Provinces.MIN.topo.json');
+const municipalitiesGeoJSON = require('../../data/geo/Spain-04-Municipalities.MIN.topo.json');
 
 export const spainLevel4: NutsLevelDescriptor = {
   geoJSON: municipalitiesGeoJSON,
