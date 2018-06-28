@@ -12,7 +12,7 @@ export const DisplayMapComponent: React.StatelessComponent = (props) => (
     <h1 className={style.header}>Map Component</h1>
     <div className={style.cardContainer}>
       <MapComponent
-        nuts={getNuts(spainLevel3)}
+        nuts={getNuts(spainLevel4)}
         data={getElectionData()}
       />
     </div>
