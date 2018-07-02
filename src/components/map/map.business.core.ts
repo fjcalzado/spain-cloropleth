@@ -1,7 +1,6 @@
 import { select, selectAll, event as d3Event } from 'd3-selection';
 import { geoPath } from 'd3-geo';
 import { zoom } from 'd3-zoom';
-import { GeometryObject, Feature } from 'geojson';
 import { MapSetup, defaultMapSetup } from './map.setup';
 import { NutsAPI } from '../../api/geo';
 import { DataAPI } from '../../api/data';
