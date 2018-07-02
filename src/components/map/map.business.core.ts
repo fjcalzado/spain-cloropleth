@@ -1,5 +1,5 @@
 import { select, selectAll, event as d3Event } from 'd3-selection';
-import { geoPath } from 'd3-geo';
+import { geoPath, GeoProjection } from 'd3-geo';
 import { zoom } from 'd3-zoom';
 import { MapSetup, defaultMapSetup } from './map.setup';
 import { NutsAPI } from '../../api/geo';
@@ -18,10 +18,11 @@ const d3 = { select, selectAll, geoPath, zoom };
 
 const style = require('./map.style.scss');
 
+type Extent = [[number, number], [number, number]];
 
 export const CreateMapAPI = (mapSetup: MapSetup = defaultMapSetup): MapAPI => {
   // Closure Constants
-  const paddedExtent = [[mapSetup.internalPadding, mapSetup.internalPadding],
+  const paddedExtent: Extent = [[mapSetup.internalPadding, mapSetup.internalPadding],
     [mapSetup.width - mapSetup.internalPadding, mapSetup.height - mapSetup.internalPadding]];
 
   // Closure Variables
@@ -74,7 +75,7 @@ export const CreateMapAPI = (mapSetup: MapSetup = defaultMapSetup): MapAPI => {
 
   // API Methods - Enter() Pattern
   const enter = (nutsApi: NutsAPI, dataApi?: DataAPI) => {
-    const projection = nutsApi.projection ? nutsApi.projection : mapSetup.defaultProjection;
+    const projection: GeoProjection = nutsApi.projection ? nutsApi.projection : mapSetup.defaultProjection;
     geoPathGenerator = d3.geoPath(projection.fitExtent(paddedExtent, nutsApi.featureCollection));
 
     const mergedNutsData = mergeNutsAndData(nutsApi, dataApi);

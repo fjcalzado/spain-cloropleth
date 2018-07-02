@@ -1,10 +1,10 @@
-import { geoMercator } from 'd3-geo';
+import { geoMercator, GeoProjection } from 'd3-geo';
 
 export interface MapSetup {
   width: number;
   height: number;
   internalPadding: number;
-  defaultProjection: any;  // TODO. D3 typings are broken (may 18).
+  defaultProjection: GeoProjection;
   defaultFillColor: string;
   maxZoomScale: number;
   clickZoomFitScale: number;

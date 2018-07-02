@@ -37,6 +37,7 @@
     "topojson-simplify": "^3.0.2"
   },
   "devDependencies": {
+    "@types/d3": "^5.0.0",
     "@types/deep-freeze": "^0.1.1",
     "@types/enzyme": "^3.1.9",
     "@types/geojson": "^7946.0.4",

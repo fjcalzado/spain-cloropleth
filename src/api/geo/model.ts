@@ -6,6 +6,7 @@ import {
   MultiLineString
 } from 'geojson';
 import { Topology } from 'topojson-specification';
+import { GeoProjection } from 'd3';
 
 export interface NutsLevelDescriptor {
   geoJSON: Topology;
@@ -16,7 +17,7 @@ export interface NutsLevelDescriptor {
 export interface NutsAPI<P = GeoJsonProperties> {
   featureCollection: FeatureCollection<GeometryObject>;
   mesh: MultiLineString;
-  projection?: any;
+  projection?: GeoProjection;
   key: (feature: Feature<GeometryObject, P>) => any;
   name: (feature: Feature<GeometryObject, P>) => string;
 }
