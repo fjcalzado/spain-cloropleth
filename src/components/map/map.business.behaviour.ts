@@ -2,11 +2,8 @@ import { select, mouse, event as d3Event } from 'd3-selection';
 import { zoom } from 'd3-zoom';
 import { NutsAPI } from '../../api/geo';
 import { DataAPI } from '../../api/data';
-import { cnc } from '../../utils/classname';
 import { MergedNutData } from './map.business.model';
-const d3 = { select, mouse, zoom};
-
-const styles = require('./map.scss');
+const d3 = { select, mouse, zoom };
 
 
 export const mergeNutsAndData = (nutsApi: NutsAPI, dataApi?: DataAPI): MergedNutData[] => {
@@ -37,28 +34,6 @@ export const setSizeFromRoot = (root: Element, svg) => () => {
 //     .append('div')
 //       .attr('class', cnc(styles.tooltip, styles.hidden));
 // };
-
-export const showTooltip = (datum: MergedNutData, tooltip, dataApi: DataAPI) => {
-  if (tooltip && dataApi) {
-    tooltip.html(dataApi.getTooltipContent(datum.data));
-    updateTooltipPosition(tooltip);
-    tooltip.classed(styles.hidden, false);
-  }
-};
-
-export const hideTooltip = (tooltip) => {
-  if (tooltip) tooltip.classed(styles.hidden, true);
-};
-
-export const updateTooltipPosition = (tooltip) => {
-  if (tooltip) {
-    const mousePosX = d3.mouse(document.body)[0] + 25;
-    const mousePosY = d3.mouse(document.body)[1] + 40;
-    tooltip
-      .style('left', `${mousePosX}px`)
-      .style('top', `${mousePosY}px`)
-  }
-};
 
 export const getZoomHandler = (element, maxScale, maxExtent) => d3.zoom()
   .extent(maxExtent)

@@ -3,7 +3,7 @@ import { select } from 'd3-selection';
 import { CreateMapAPI } from './map.business.core';
 import { NutsAPI } from '../../api/geo';
 import { DataAPI } from '../../api/data';
-import { cnc } from '../../utils/classname';
+import { TooltipComponent } from './components';
 const styles = require('./map.scss');
 
 export interface Props {
@@ -53,11 +53,9 @@ export class MapComponent extends React.Component<Props, State> {
           viewBox={`0 0 ${this.props.width} ${this.props.height}`}
         >
         </svg>
-        <div
-          ref={this.setD3Node('tooltip')}
-          className={cnc(styles.tooltip, styles.hidden)}
-        >
-        </div>
+        <TooltipComponent
+          onSetRef={this.setD3Node('tooltip')}
+        />
       </div>
     );
   }

@@ -13,7 +13,8 @@ import {
   applyZoomEffect
 } from './map.business.effects';
 import { MapAPI, MergedNutData } from './map.business.model';
-import { mergeNutsAndData, setSizeFromRoot, getZoomHandler, showTooltip, updateTooltipPosition, hideTooltip } from './map.business.behaviour';
+import { mergeNutsAndData, getZoomHandler } from './map.business.behaviour';
+import { showTooltip, hideTooltip, updateTooltipPosition } from './components/tooltip';
 const d3 = { select, selectAll, geoPath, zoom };
 
 const styles = require('./map.scss');
