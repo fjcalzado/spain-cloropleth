@@ -6,7 +6,7 @@ import { cnc } from '../../utils/classname';
 import { MergedNutData } from './map.business.model';
 const d3 = { select, mouse, zoom};
 
-const style = require('./map.style.scss');
+const styles = require('./map.scss');
 
 
 export const mergeNutsAndData = (nutsApi: NutsAPI, dataApi?: DataAPI): MergedNutData[] => {
@@ -32,22 +32,22 @@ export const setSizeFromRoot = (root: Element, svg) => () => {
   }
 }
 
-export const createTooltip = (node: Element) => {
-  return d3.select(node)
-    .append('div')
-      .attr('class', cnc(style.tooltip, style.hidden));
-};
+// export const createTooltip = (node: Element) => {
+//   return d3.select(node)
+//     .append('div')
+//       .attr('class', cnc(styles.tooltip, styles.hidden));
+// };
 
 export const showTooltip = (datum: MergedNutData, tooltip, dataApi: DataAPI) => {
   if (tooltip && dataApi) {
     tooltip.html(dataApi.getTooltipContent(datum.data));
     updateTooltipPosition(tooltip);
-    tooltip.classed(style.hidden, false);
+    tooltip.classed(styles.hidden, false);
   }
 };
 
 export const hideTooltip = (tooltip) => {
-  if (tooltip) tooltip.classed(style.hidden, true);
+  if (tooltip) tooltip.classed(styles.hidden, true);
 };
 
 export const updateTooltipPosition = (tooltip) => {

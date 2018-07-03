@@ -2,7 +2,7 @@ import { select } from 'd3-selection';
 import { zoomIdentity } from 'd3-zoom';
 const d3 = { select, zoomIdentity };
 
-const style = require('./map.style.scss');
+const styles = require('./map.scss');
 
 
 const SVG_SHADOW_ID = "svgshadow";
@@ -27,7 +27,7 @@ export const addSvgShadowDefinition = (defs) => {
 }
 
 export const applyZoomEffect = (node, extent, zoomHandler, svg, mapSetup) => {
-  const currentSelection = d3.select(node).classed(style.zoomed, true);
+  const currentSelection = d3.select(node).classed(styles.zoomed, true);
 
   const dx = extent[1][0] - extent[0][0];
   const dy = extent[1][1] - extent[0][1];

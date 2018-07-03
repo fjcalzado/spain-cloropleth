@@ -13,62 +13,58 @@ import {
   applyZoomEffect
 } from './map.business.effects';
 import { MapAPI, MergedNutData } from './map.business.model';
-import { mergeNutsAndData, setSizeFromRoot, getZoomHandler, createTooltip, showTooltip, updateTooltipPosition, hideTooltip } from './map.business.behaviour';
+import { mergeNutsAndData, setSizeFromRoot, getZoomHandler, showTooltip, updateTooltipPosition, hideTooltip } from './map.business.behaviour';
 const d3 = { select, selectAll, geoPath, zoom };
 
-const style = require('./map.style.scss');
+const styles = require('./map.scss');
 
 type Extent = [[number, number], [number, number]];
 
-export const CreateMapAPI = (mapSetup: MapSetup = defaultMapSetup): MapAPI => {
+export const CreateMapAPI = ({ svg, tooltip }, mapSetup: MapSetup = defaultMapSetup): MapAPI => {
   // Closure Constants
   const paddedExtent: Extent = [[mapSetup.internalPadding, mapSetup.internalPadding],
-    [mapSetup.width - mapSetup.internalPadding, mapSetup.height - mapSetup.internalPadding]];
+  [mapSetup.width - mapSetup.internalPadding, mapSetup.height - mapSetup.internalPadding]];
 
   // Closure Variables
-  let root: Element = null;
-  let svg = null;
+  // let svg = null;
   let defs = null;
-  let background = null;
   let zoomHandler = null;
   let zoomGroup = null;
-  let nutGroup = null;
-  let meshGroup = null;
-  let tooltip = null;
+  // let tooltip = null;
   let selectionZoomed = d3.select(null);
   let geoPathGenerator = null;
 
   // API Methods - Create Map
-  const createMap = (rootNode: Element, nutsApi: NutsAPI, dataApi?: DataAPI) => {
-    root = rootNode;
-
-    svg = d3.select(root)
-      .append('svg')
-        .attr('class', style.svg)
-        .attr('viewBox', `0 0 ${mapSetup.width} ${mapSetup.height}`);
-    setSizeFromRoot(root, svg);
-    window.addEventListener('resize', setSizeFromRoot(root, svg));
+  const createMap = (nutsApi: NutsAPI, dataApi?: DataAPI) => {
+    // svg = d3Element;
+    // root = element;
+    // svg = d3.select(element)
+    //   .append('svg')
+    //     .attr('class', styles.svg)
+    //     .attr('viewBox', `0 0 ${mapSetup.width} ${mapSetup.height}`);
+    // setSizeFromRoot(root, svg);
+    // window.addEventListener('resize', setSizeFromRoot(root, svg));
 
     defs = svg.append('defs');
     addSvgShadowDefinition(defs);
 
-    background = svg
+    svg
       .append('rect')
-        .attr('class', style.background)
-        .attr('width', mapSetup.width)
-        .attr('height', mapSetup.height)
-        .on('click', () => { selectionZoomed = resetZoomEffect(zoomHandler, svg) });
+      .attr('class', styles.background)
+      .attr('width', mapSetup.width)
+      .attr('height', mapSetup.height)
+      .on('click', () => { selectionZoomed = resetZoomEffect(zoomHandler, svg) });
 
     zoomGroup = svg
       .append('g')
-        .attr('class', style.zoomGroup)
-        .on('mousemove', () => d3Event.preventDefault());
+      .attr('class', styles.zoomGroup)
+      .on('mousemove', () => d3Event.preventDefault());
     zoomHandler = getZoomHandler(zoomGroup, mapSetup.maxZoomScale, paddedExtent)
     svg.call(zoomHandler);
 
-    if (dataApi && dataApi.getTooltipContent) {
-      tooltip = createTooltip(root);
-    }
+    // if (dataApi && dataApi.getTooltipContent) {
+    //   tooltip = createTooltip(root);
+    // }
 
     enter(nutsApi, dataApi);
   };
@@ -83,39 +79,39 @@ export const CreateMapAPI = (mapSetup: MapSetup = defaultMapSetup): MapAPI => {
     const getColor = dataApi && dataApi.getColor ?
       ((datum: MergedNutData) => (dataApi.getColor(datum.data))) : mapSetup.defaultFillColor;
 
-    nutGroup = zoomGroup.append('g')
-        .attr('class', style.nutGroup)
+    zoomGroup.append('g')
+      .attr('class', styles.nutGroup)
       .selectAll('path')
       .data(mergedNutsData, (datum: MergedNutData) => datum ? datum.key : this.id)
       .enter()
       .append('path')
-        .attr('class', style.nut)
-        .attr('d', getGeoPath)
-        .attr('fill', getColor)
-        .on('mouseenter', function(datum: MergedNutData) {
-          moveToFront(this);
-          applyHighlight(this);
-          showTooltip(datum, tooltip, dataApi);
-        })
-        .on('mousemove', () => updateTooltipPosition(tooltip))
-        .on('mouseleave', function(datum: MergedNutData) {
-          resetHighlight(this);
-          hideTooltip(tooltip);
-        })
-        .on('click', function(datum: MergedNutData) {
-          if (selectionZoomed.node() !== this) {
-            selectionZoomed = applyZoomEffect(this, geoPathGenerator.bounds(datum.nut), zoomHandler, svg, mapSetup)
-          } else {
-            selectionZoomed = resetZoomEffect(zoomHandler, svg);
-          }
-        });
+      .attr('class', styles.nut)
+      .attr('d', getGeoPath)
+      .attr('fill', getColor)
+      .on('mouseenter', function(datum: MergedNutData) {
+        moveToFront(this);
+        applyHighlight(this);
+        showTooltip(datum, tooltip, dataApi);
+      })
+      .on('mousemove', () => updateTooltipPosition(tooltip))
+      .on('mouseleave', function(datum: MergedNutData) {
+        resetHighlight(this);
+        hideTooltip(tooltip);
+      })
+      .on('click', function(datum: MergedNutData) {
+        if (selectionZoomed.node() !== this) {
+          selectionZoomed = applyZoomEffect(this, geoPathGenerator.bounds(datum.nut), zoomHandler, svg, mapSetup)
+        } else {
+          selectionZoomed = resetZoomEffect(zoomHandler, svg);
+        }
+      });
 
-    meshGroup = zoomGroup.append('g')
-        .attr('class', style.meshGroup)
+    zoomGroup.append('g')
+      .attr('class', styles.meshGroup)
       .append('path')
       .datum(nutsApi.mesh)
-        .attr('class', style.mesh)
-        .attr('d', geoPathGenerator);
+      .attr('class', styles.mesh)
+      .attr('d', geoPathGenerator);
   };
 
   return {

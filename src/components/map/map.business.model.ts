@@ -9,5 +9,5 @@ export interface MergedNutData {
 }
 
 export interface MapAPI {
-  createMap: (rootNode: Element, nutsApi: NutsAPI, dataApi?: DataAPI) => void;
+  createMap: (nutsApi: NutsAPI, dataApi?: DataAPI) => void;
 }
