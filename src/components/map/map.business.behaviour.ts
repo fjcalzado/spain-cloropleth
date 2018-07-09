@@ -35,10 +35,10 @@ export const setSizeFromRoot = (root: Element, svg) => () => {
 //       .attr('class', cnc(styles.tooltip, styles.hidden));
 // };
 
-export const getZoomHandler = (element, maxScale, maxExtent) => d3.zoom()
-  .extent(maxExtent)
-  .scaleExtent([1, maxScale])
-  .translateExtent(maxExtent)
-  .on('zoom', () => {
-    element.attr('transform', d3Event.transform)
-  });
+// export const getZoomHandler = (element, maxScale, maxExtent) => d3.zoom()
+//   .extent(maxExtent)
+//   .scaleExtent([1, maxScale])
+//   .translateExtent(maxExtent)
+//   .on('zoom', () => {
+//     element.attr('transform', d3Event.transform)
+//   });

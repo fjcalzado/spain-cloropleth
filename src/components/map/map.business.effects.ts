@@ -7,24 +7,24 @@ const styles = require('./map.scss');
 
 const SVG_SHADOW_ID = "svgshadow";
 
-export const addSvgShadowDefinition = (defs) => {
-  const filter = defs.append('filter')
-    .attr('id', SVG_SHADOW_ID)
-    .attr('filterUnits','userSpaceOnUse');
-  filter.append('feGaussianBlur')
-      .attr('in', 'SourceAlpha')
-      .attr('stdDeviation', 3);
-  filter.append('feOffset')
-      .attr('dx', 0)
-      .attr('dy', 0);
-  filter.append('feComponentTransfer')
-    .append('feFuncA')
-      .attr('type', 'linear')
-      .attr('slope', 0.2);
-  const feMerge = filter.append('feMerge');
-  feMerge.append('feMergeNode');
-  feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
-}
+// export const addSvgShadowDefinition = (defs) => {
+//   const filter = defs.append('filter')
+//     .attr('id', SVG_SHADOW_ID)
+//     .attr('filterUnits','userSpaceOnUse');
+//   filter.append('feGaussianBlur')
+//       .attr('in', 'SourceAlpha')
+//       .attr('stdDeviation', 3);
+//   filter.append('feOffset')
+//       .attr('dx', 0)
+//       .attr('dy', 0);
+//   filter.append('feComponentTransfer')
+//     .append('feFuncA')
+//       .attr('type', 'linear')
+//       .attr('slope', 0.2);
+//   const feMerge = filter.append('feMerge');
+//   feMerge.append('feMergeNode');
+//   feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+// }
 
 export const applyZoomEffect = (node, extent, zoomHandler, svg, mapSetup) => {
   const currentSelection = d3.select(node).classed(styles.zoomed, true);

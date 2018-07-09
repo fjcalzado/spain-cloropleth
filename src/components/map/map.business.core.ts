@@ -46,22 +46,22 @@ export const CreateMapAPI = ({ svg, tooltip }, mapSetup: MapSetup = defaultMapSe
     // setSizeFromRoot(root, svg);
     // window.addEventListener('resize', setSizeFromRoot(root, svg));
 
-    defs = svg.append('defs');
-    addSvgShadowDefinition(defs);
+    // defs = svg.append('defs');
+    // addSvgShadowDefinition(defs);
 
-    svg
-      .append('rect')
-      .attr('class', styles.background)
-      .attr('width', mapSetup.width)
-      .attr('height', mapSetup.height)
-      .on('click', () => { selectionZoomed = resetZoomEffect(zoomHandler, svg) });
+    // svg
+    //   .append('rect')
+    //   .attr('class', styles.background)
+    //   .attr('width', mapSetup.width)
+    //   .attr('height', mapSetup.height)
+    //   .on('click', () => { selectionZoomed = resetZoomEffect(zoomHandler, svg) });
 
-    zoomGroup = svg
-      .append('g')
-      .attr('class', styles.zoomGroup)
-      .on('mousemove', () => d3Event.preventDefault());
-    zoomHandler = getZoomHandler(zoomGroup, mapSetup.maxZoomScale, paddedExtent)
-    svg.call(zoomHandler);
+    // zoomGroup = svg
+    //   .append('g')
+    //   .attr('class', styles.zoomGroup)
+    //   .on('mousemove', () => d3Event.preventDefault());
+    // zoomHandler = getZoomHandler(zoomGroup, mapSetup.maxZoomScale, paddedExtent)
+    // svg.call(zoomHandler);
 
     // if (dataApi && dataApi.getTooltipContent) {
     //   tooltip = createTooltip(root);

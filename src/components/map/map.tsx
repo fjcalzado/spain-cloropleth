@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { select } from 'd3-selection';
+import { GeoProjection, geoMercator } from 'd3-geo';
 import { CreateMapAPI } from './map.business.core';
 import { NutsAPI } from '../../api/geo';
 import { DataAPI } from '../../api/data';
@@ -11,6 +12,11 @@ export interface Props {
   data?: DataAPI;
   width?: number;
   height?: number;
+  internalPadding?: number;
+  defaultProjection?: GeoProjection;
+  fillColor?: string;
+  maxZoomScale?: number;
+  clickZoomFitScale?: number;
 }
 
 interface State {
@@ -18,26 +24,23 @@ interface State {
 }
 
 export class MapComponent extends React.Component<Props, State> {
-  private d3Nodes = {
-    root: null,
-    svg: null,
-    tooltip: null,
+  private nodes = {
+    root: React.createRef<HTMLDivElement>(),
+    svg: React.createRef<SVGSVGElement>(),
   };
 
   static defaultProps: Partial<Props> = {
     width: 700,
     height: 500,
+    internalPadding: 20,
+    defaultProjection: geoMercator(),
+    fillColor: 'lightgrey',
+    maxZoomScale: 30,
+    clickZoomFitScale: 0.65,
   };
 
   public componentDidMount() {
-    CreateMapAPI(this.d3Nodes).createMap(this.props.nuts, this.props.data);
-  }
-
-  private setD3Node = (d3Node) => (node) => {
-    this.d3Nodes = {
-      ...this.d3Nodes,
-      [d3Node]: select(node),
-    };
+    CreateMapAPI(this.nodes).createMap(this.props.nuts, this.props.data);
   }
 
   public shouldComponentUpdate() {
@@ -46,16 +49,13 @@ export class MapComponent extends React.Component<Props, State> {
 
   public render() {
     return (
-      <div className={styles.container} ref={this.setD3Node('root')}>
+      <div className={styles.container} ref={this.nodes.root}>
         <svg
-          ref={this.setD3Node('svg')}
+          ref={this.nodes.svg}
           className={styles.svg}
           viewBox={`0 0 ${this.props.width} ${this.props.height}`}
         >
         </svg>
-        <TooltipComponent
-          onSetRef={this.setD3Node('tooltip')}
-        />
       </div>
     );
   }
