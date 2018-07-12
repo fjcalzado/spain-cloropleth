@@ -2,7 +2,7 @@ import { D3Selection } from './types';
 
 const SVG_SHADOW_ID = 'svgshadow';
 
-export const renderShadowDefinitions = (svg: D3Selection<SVGSVGElement>): D3Selection<any> => {
+export const renderShadowDefinitions = (svg: D3Selection<any>): D3Selection<any> => {
   const defs = svg.append('defs');
   const filter = defs
     .append('filter')

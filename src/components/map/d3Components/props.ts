@@ -4,15 +4,15 @@ import { DataAPI } from '../../../api/data';
 import { D3Selection } from './types';
 
 export interface Props {
-  root: D3Selection<HTMLDivElement>;
-  svg: D3Selection<SVGSVGElement>;
+  root: D3Selection<any>;
+  svg: D3Selection<any>;
   nuts: NutsAPI;
-  data?: DataAPI;
-  width?: number;
-  height?: number;
-  internalPadding?: number;
-  defaultProjection?: GeoProjection;
-  fillColor?: string;
-  maxZoomScale?: number;
-  clickZoomFitScale?: number;
+  data: DataAPI;
+  width: number;
+  height: number;
+  internalPadding: number;
+  defaultProjection: GeoProjection;
+  fillColor: string;
+  maxZoomScale: number;
+  clickZoomFitScale: number;
 }
