@@ -3,7 +3,8 @@ import { select } from 'd3-selection';
 import { GeoProjection, geoMercator } from 'd3-geo';
 import { NutsAPI } from '../../api/geo';
 import { DataAPI } from '../../api/data';
-import { renderMap } from './d3Components/map';
+import { mapComponent } from './d3Components/map';
+import { mapAreaListModelToVM } from './mapper';
 const styles = require('./map.scss');
 
 export interface Props {
@@ -11,9 +12,9 @@ export interface Props {
   data?: DataAPI;
   width?: number;
   height?: number;
-  internalPadding?: number;
-  defaultProjection?: GeoProjection;
-  fillColor?: string;
+  padding?: number;
+  projection?: GeoProjection;
+  defaultfillColor?: string;
   maxZoomScale?: number;
   clickZoomFitScale?: number;
 }
@@ -21,15 +22,15 @@ export interface Props {
 export class MapComponent extends React.Component<Props, {}> {
   private nodes = {
     root: null,
-    svg: null,
+    svg: React.createRef<SVGSVGElement>(),
   };
 
   static defaultProps: Partial<Props> = {
     width: 700,
     height: 500,
-    internalPadding: 20,
-    defaultProjection: geoMercator(),
-    fillColor: 'lightgrey',
+    padding: 20,
+    projection: geoMercator(),
+    defaultfillColor: 'lightgrey',
     maxZoomScale: 30,
     clickZoomFitScale: 0.65,
   };
@@ -38,21 +39,17 @@ export class MapComponent extends React.Component<Props, {}> {
     this.nodes.root = node;
   }
 
-  setSvgNode = (node) => {
-    this.nodes.svg = node;
-  }
-
   public componentDidMount() {
-    renderMap({
-      root: select(this.nodes.root),
-      svg: select(this.nodes.svg),
-      nuts: this.props.nuts,
-      data: this.props.data,
+    mapComponent({
+      // root: select(this.nodes.root),
+      svg: select(this.nodes.svg.current),
+      areas: mapAreaListModelToVM(this.props.nuts, this.props.data),
+      geometryObjects: this.props.nuts.featureCollection,
+      projection: this.props.nuts.projection,
       width: this.props.width,
       height: this.props.height,
-      internalPadding: this.props.internalPadding,
-      defaultProjection: this.props.defaultProjection,
-      fillColor: this.props.fillColor,
+      padding: this.props.padding,
+      defaultfillColor: this.props.defaultfillColor,
       maxZoomScale: this.props.maxZoomScale,
       clickZoomFitScale: this.props.clickZoomFitScale,
     })
@@ -66,7 +63,7 @@ export class MapComponent extends React.Component<Props, {}> {
     return (
       <div className={styles.container} ref={this.setRootNode}>
         <svg
-          ref={this.setSvgNode}
+          ref={this.nodes.svg}
           className={styles.svg}
           viewBox={`0 0 ${this.props.width} ${this.props.height}`}
         >
