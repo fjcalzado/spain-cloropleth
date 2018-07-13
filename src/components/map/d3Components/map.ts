@@ -1,8 +1,8 @@
 import { geoPath, GeoProjection, GeoPath, GeoPermissibleObjects } from 'd3-geo';
 import { GeometryObject, FeatureCollection } from 'geojson';
 import { Extension, D3Selection } from './types';
-import { renderShadowDefinitions } from './shadows';
-import { zoomComponent } from './zoom/zoom';
+import { shadowDefinitions } from './shadowDefinitions';
+import { zoomComponent } from './zoom';
 import { Area } from '../viewModel';
 const styles = require('./map.scss');
 
@@ -32,7 +32,9 @@ export const mapComponent = (props: Props) => {
     mapExtension: null,
     geoPathGenerator: null,
   };
-  renderShadowDefinitions(props.svg);
+  shadowDefinitions({
+    svg: props.svg,
+  });
 
   state.map = renderMap(props);
   state.mapExtension = calculateMapExtension(props);

@@ -2,8 +2,17 @@ import { D3Selection } from './types';
 
 const SVG_SHADOW_ID = 'svgshadow';
 
-export const renderShadowDefinitions = (svg: D3Selection<any>): D3Selection<any> => {
+interface Props {
+  svg: D3Selection<any>;
+}
+
+export const shadowDefinitions = (props: Props) => {
+  render(props);
+};
+
+const render = ({ svg }: Props) => {
   const defs = svg.append('defs');
+
   const filter = defs
     .append('filter')
     .attr('id', SVG_SHADOW_ID)
@@ -26,6 +35,4 @@ export const renderShadowDefinitions = (svg: D3Selection<any>): D3Selection<any>
   feMerge.append('feMergeNode');
   feMerge.append('feMergeNode')
     .attr('in', 'SourceGraphic');
-
-  return defs;
-}
+};
