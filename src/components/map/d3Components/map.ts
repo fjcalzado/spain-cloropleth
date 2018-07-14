@@ -1,9 +1,8 @@
 import { geoPath, GeoProjection, GeoPath, GeoPermissibleObjects } from 'd3-geo';
 import { GeometryObject, FeatureCollection } from 'geojson';
-import { Extension, D3Selection } from './types';
 import { shadowDefinitions } from './shadowDefinitions';
 import { zoomComponent } from './zoom';
-import { Area } from '../viewModel';
+import { Area, Extension, D3Selection } from '../viewModel';
 const styles = require('./map.scss');
 
 interface Props {
