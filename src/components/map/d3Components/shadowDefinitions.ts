@@ -1,9 +1,9 @@
-import { D3Selection } from './types';
+import { D3Selection } from '../viewModel';
+import { SVG_SHADOW_ID } from './constants';
 
-const SVG_SHADOW_ID = 'svgshadow';
 
 interface Props {
-  svg: D3Selection<any>;
+  svg: D3Selection;
 }
 
 export const shadowDefinitions = (props: Props) => {

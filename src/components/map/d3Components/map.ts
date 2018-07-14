@@ -3,11 +3,13 @@ import { GeometryObject, FeatureCollection } from 'geojson';
 import { shadowDefinitions } from './shadowDefinitions';
 import { zoomComponent } from './zoom';
 import { Area, Extension, D3Selection } from '../viewModel';
+import { SVG_SHADOW_ID } from './constants';
+import { select, BaseType } from 'd3';
 const styles = require('./map.scss');
 
 interface Props {
   // root: D3Selection<any>; // For tooltip
-  svg: D3Selection<any>;
+  svg: D3Selection;
   areas: Area[];
   geometryObjects: FeatureCollection<GeometryObject, any>;
   projection: GeoProjection;
@@ -17,10 +19,11 @@ interface Props {
   defaultfillColor: string;
   maxZoomScale: number;
   clickZoomFitScale: number;
+  highlightColor?: string
 }
 
 interface State {
-  map: D3Selection<any>;
+  map: D3Selection;
   mapExtension: Extension;
   geoPathGenerator: GeoPath<any, GeoPermissibleObjects>;
 }
@@ -71,7 +74,13 @@ const enter = (props: Props, state: State) => {
       Boolean(area.color) ?
         area.color :
         props.defaultfillColor
-    ));
+    ))
+    .on('mouseenter', function() {
+      addHighlight(this, props.highlightColor);
+    })
+    .on('mouseleave', function() {
+      removeHighlight(this);
+    })
   // .on('mouseenter', function(datum: MergedNutData) {
   //   moveToFront(this);
   //   applyHighlight(this);
@@ -95,3 +104,20 @@ const getGeoPathGenerator = (props: Props, state: State) => (
       .fitExtent(state.mapExtension, props.geometryObjects)
   )
 );
+
+const addHighlight = (areaElement: BaseType, highlightColor = 'yellow') => {
+  if (areaElement) {
+    select(areaElement)
+      .attr('filter', `url(#${SVG_SHADOW_ID})`)
+      .attr('stroke', highlightColor)
+      .attr('stroke-width', '0.5px');
+  }
+};
+
+const removeHighlight = (areaElement: BaseType) => {
+  if (areaElement) {
+    select(areaElement)
+      .attr('filter', `none`)
+      .attr('stroke', 'none');
+  }
+};

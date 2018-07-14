@@ -7,6 +7,6 @@ export interface Area {
   geometryObject: Feature<GeometryObject, any>;
 }
 
-export type D3Selection<T extends BaseType> = Selection<T, {}, null, undefined>;
+export type D3Selection = Selection<any, {}, null, undefined>;
 
 export type Extension = [[number, number], [number, number]];

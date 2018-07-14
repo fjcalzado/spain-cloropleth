@@ -1,11 +1,10 @@
 import { event as d3Event } from 'd3-selection';
 import { zoom, zoomIdentity } from 'd3-zoom';
-import { D3Selection, Extension } from './types';
-import { Area } from '../viewModel';
+import { Area, D3Selection, Extension } from '../viewModel';
 
 interface Props {
-  svg: D3Selection<any>;
-  map: D3Selection<any>;
+  svg: D3Selection;
+  map: D3Selection;
   areas: Area[];
   mapExtension: Extension;
   getAreaExtension: (area: Area) => Extension;
