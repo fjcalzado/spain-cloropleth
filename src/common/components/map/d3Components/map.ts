@@ -2,7 +2,7 @@ import { select, BaseType } from 'd3';
 import { geoPath, GeoProjection, GeoPath, GeoPermissibleObjects } from 'd3-geo';
 import { GeometryObject, FeatureCollection } from 'geojson';
 import { D3Selection, Extension } from '../../../types';
-import { Area } from '../viewModel';
+import { GeoArea } from '../viewModel';
 import { SVG_SHADOW_ID } from './constants';
 import { shadowDefinitions } from './shadowDefinitions';
 import { tooltipComponent } from '../../../d3Components/tooltip';
@@ -12,7 +12,7 @@ const styles = require('./map.scss');
 interface Props {
   root: D3Selection;
   svg: D3Selection;
-  areas: Area[];
+  geoAreas: GeoArea[];
   geometryObjects: FeatureCollection<GeometryObject, any>;
   projection: GeoProjection;
   width: number;
@@ -48,7 +48,7 @@ export const mapComponent = (props: Props) => {
   zoomComponent({
     svg: props.svg,
     node: state.map,
-    zoomAreas: props.areas,
+    zoomAreas: props.geoAreas,
     nodeExtension: state.mapExtension,
     nodeSelectionElement: 'path',
     getZoomAreaExension: (geometryObject) => (
@@ -83,19 +83,19 @@ const renderMap = (props: Props) => props.svg
 const enter = (props: Props, state: State) => {
   state.map
     .selectAll('path')
-    .data(props.areas, (area: Area) => area.id)
+    .data(props.geoAreas, (geoArea: GeoArea) => geoArea.id)
     .enter()
     .append('path')
     .attr('class', styles.area)
-    .attr('d', (area: Area) => state.geoPathGenerator(area.geometryObject))
-    .attr('fill', (area: Area) => (
-      Boolean(area.color) ?
-        area.color :
+    .attr('d', (geoArea: GeoArea) => state.geoPathGenerator(geoArea.geometryObject))
+    .attr('fill', (geoArea: GeoArea) => (
+      Boolean(geoArea.color) ?
+        geoArea.color :
         props.defaultfillColor
     ))
-    .on('mouseenter', function(area: Area) {
+    .on('mouseenter', function(geoArea: GeoArea) {
       addHighlight(this, props.highlightColor);
-      state.onShowTooltip(area.tooltipMessage);
+      state.onShowTooltip(geoArea.tooltipMessage);
     })
     .on('mousemove', () => state.onUpdateTooltipPosition)
     .on('mouseleave', function() {
@@ -116,18 +116,18 @@ const getGeoPathGenerator = (props: Props, state: State) => (
   )
 );
 
-const addHighlight = (areaElement: BaseType, highlightColor = 'yellow') => {
-  if (areaElement) {
-    select(areaElement)
+const addHighlight = (geoAreaElement: BaseType, highlightColor = 'yellow') => {
+  if (geoAreaElement) {
+    select(geoAreaElement)
       .attr('filter', `url(#${SVG_SHADOW_ID})`)
       .attr('stroke', highlightColor)
       .attr('stroke-width', '0.5px');
   }
 };
 
-const removeHighlight = (areaElement: BaseType) => {
-  if (areaElement) {
-    select(areaElement)
+const removeHighlight = (geoAreaElement: BaseType) => {
+  if (geoAreaElement) {
+    select(geoAreaElement)
       .attr('filter', `none`)
       .attr('stroke', 'none');
   }

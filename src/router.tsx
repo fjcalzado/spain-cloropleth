@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { DisplayMapComponent } from './pages/display-map';
+import { LifeExpectancyMapComponent } from './pages/lifeExpectancyMap';
 import { PageBComponent } from './pages/pageB';
 import { hashHistory, Router, Route } from 'react-router';
 
 export const AppRouter: React.StatelessComponent<{}> = () => (
   <Router history={hashHistory}>
-    <Route path="/" component={DisplayMapComponent}>
-      <Route path="/map" component={DisplayMapComponent}/>
-      <Route path="/pageB" component={PageBComponent}/>
+    <Route path="/" component={LifeExpectancyMapComponent}>
+      <Route path="/map" component={LifeExpectancyMapComponent} />
+      <Route path="/pageB" component={PageBComponent} />
     </Route>
   </Router>
 );

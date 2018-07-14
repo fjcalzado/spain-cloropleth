@@ -1,6 +1,6 @@
 import { Feature, GeometryObject } from 'geojson';
 
-export interface Area {
+export interface GeoArea {
   id: any;
   geometryObject: Feature<GeometryObject, any>;
   color: string;

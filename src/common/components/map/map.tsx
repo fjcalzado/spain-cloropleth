@@ -3,11 +3,11 @@ import { select } from 'd3-selection';
 import { GeoProjection, geoMercator } from 'd3-geo';
 import { FeatureCollection, GeometryObject } from 'geojson';
 import { mapComponent } from './d3Components';
-import { Area } from './viewModel';
+import { GeoArea } from './viewModel';
 const styles = require('./map.scss');
 
 export interface Props {
-  areas: Area[];
+  geoAreas: GeoArea[];
   geometryObjects: FeatureCollection<GeometryObject, any>;
   projection?: GeoProjection;
   width?: number;
@@ -38,7 +38,7 @@ export class MapComponent extends React.Component<Props, {}> {
     mapComponent({
       root: select(this.nodes.root.current),
       svg: select(this.nodes.svg.current),
-      areas: this.props.areas,
+      geoAreas: this.props.geoAreas,
       geometryObjects: this.props.geometryObjects,
       projection: this.props.projection,
       width: this.props.width,

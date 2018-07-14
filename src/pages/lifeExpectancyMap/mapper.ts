@@ -1,16 +1,16 @@
 import { Feature, GeometryObject } from 'geojson';
 import { NutsAPI } from '../../api/geo';
 import { DataAPI } from '../../api/data';
-import { Area } from '../../common/components/map';
+import { GeoArea } from '../../common/components/map';
 
 // TODO: Remove NutsAPI and DataAPI
-export const mapAreaListModelToVM = (nutsAPI: NutsAPI, dataAPI: DataAPI): Area[] => (
+export const mapGeoAreaListModelToVM = (nutsAPI: NutsAPI, dataAPI: DataAPI): GeoArea[] => (
   nutsAPI.featureCollection.features.map((geometryObject) => (
-    mapAreaModelToVM(geometryObject, nutsAPI, dataAPI)
+    mapGeoAreaModelToVM(geometryObject, nutsAPI, dataAPI)
   ))
 );
 
-const mapAreaModelToVM = (geometryObject: Feature<GeometryObject, any>, nutsAPI: NutsAPI, dataAPI: DataAPI): Area => {
+const mapGeoAreaModelToVM = (geometryObject: Feature<GeometryObject, any>, nutsAPI: NutsAPI, dataAPI: DataAPI): GeoArea => {
   const id = nutsAPI.key(geometryObject);
   const values = dataAPI.dataCollection.find(d => dataAPI.getKey(d) === id);
   return {
