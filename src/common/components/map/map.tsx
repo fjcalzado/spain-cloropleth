@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { select } from 'd3-selection';
 import { GeoProjection, geoMercator } from 'd3-geo';
-import { NutsAPI } from '../../api/geo';
-import { DataAPI } from '../../api/data';
+import { NutsAPI } from '../../../api/geo';
+import { DataAPI } from '../../../api/data';
 import { mapComponent } from './d3Components';
 import { mapAreaListModelToVM } from './mapper';
 const styles = require('./map.scss');

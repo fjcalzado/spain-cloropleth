@@ -1,6 +1,6 @@
 import { Feature, GeometryObject } from 'geojson';
-import { NutsAPI } from '../../api/geo';
-import { DataAPI } from '../../api/data';
+import { NutsAPI } from '../../../api/geo';
+import { DataAPI } from '../../../api/data';
 import { Area } from './viewModel';
 
 // TODO: Remove NutsAPI and DataAPI

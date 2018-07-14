@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router';
-import { MapComponent } from '../../components/map';
+import { MapComponent } from '../../common/components/map';
 import { getNuts } from '../../api/geo';
 import { getElectionData, getLifeExpectancyData } from '../../api/data';
 import { spainLevel2, spainLevel3, spainLevel4 } from '../../api/geo/nuts.spain';

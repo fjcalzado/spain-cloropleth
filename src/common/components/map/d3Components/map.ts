@@ -1,12 +1,12 @@
 import { select, BaseType } from 'd3';
 import { geoPath, GeoProjection, GeoPath, GeoPermissibleObjects } from 'd3-geo';
 import { GeometryObject, FeatureCollection } from 'geojson';
-import { D3Selection, Extension } from '../../../common/types';
+import { D3Selection, Extension } from '../../../types';
 import { Area } from '../viewModel';
 import { SVG_SHADOW_ID } from './constants';
 import { shadowDefinitions } from './shadowDefinitions';
-import { tooltipComponent } from '../../../common/d3Components/tooltip';
-import { zoomComponent } from '../../../common/d3Components/zoom';
+import { tooltipComponent } from '../../../d3Components/tooltip';
+import { zoomComponent } from '../../../d3Components/zoom';
 const styles = require('./map.scss');
 
 interface Props {
