@@ -4,6 +4,7 @@ import { GeoProjection, geoMercator } from 'd3-geo';
 import { FeatureCollection, GeometryObject } from 'geojson';
 import { mapComponent } from './d3Components';
 import { GeoArea } from './viewModel';
+import { cnc } from '../../helpers/classname';
 const styles = require('./map.scss');
 
 export interface Props {
@@ -16,6 +17,7 @@ export interface Props {
   defaultfillColor?: string;
   maxZoomScale?: number;
   clickZoomFitScale?: number;
+  className?: string;
 }
 
 export class MapComponent extends React.Component<Props, {}> {
@@ -56,7 +58,10 @@ export class MapComponent extends React.Component<Props, {}> {
 
   public render() {
     return (
-      <div className={styles.container} ref={this.nodes.root}>
+      <div
+        className={`${cnc(styles.container, this.props.className)}`}
+        ref={this.nodes.root}
+      >
         <svg
           ref={this.nodes.svg}
           viewBox={`0 0 ${this.props.width} ${this.props.height}`}

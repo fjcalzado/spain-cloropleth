@@ -9,7 +9,7 @@ module.exports = {
   context: srcPath,
   entry: {
     app: [
-      './app.tsx',
+      './index.tsx',
     ],
     appStyles: [
       './styles/_base.scss',

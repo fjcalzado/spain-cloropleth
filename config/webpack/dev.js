@@ -16,7 +16,7 @@ module.exports = merge.strategy({
     contentBase: helpers.resolveFromRootPath("dist"),
     inline: true,
     host: "localhost",
-    port: 8084,
+    port: 8080,
     stats: "minimal",
     hot: true,
   },

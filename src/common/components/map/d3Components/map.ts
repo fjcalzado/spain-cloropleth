@@ -86,7 +86,7 @@ const enter = (props: Props, state: State) => {
     .data(props.geoAreas, (geoArea: GeoArea) => geoArea.id)
     .enter()
     .append('path')
-    .attr('class', styles.area)
+    .attr('class', styles.geoArea)
     .attr('d', (geoArea: GeoArea) => state.geoPathGenerator(geoArea.geometryObject))
     .attr('fill', (geoArea: GeoArea) => (
       Boolean(geoArea.color) ?

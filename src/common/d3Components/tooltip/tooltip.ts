@@ -1,5 +1,5 @@
 import { D3Selection } from '../../types';
-import { cnc } from '../../../utils/classname';
+import { cnc } from '../../helpers/classname';
 import { mouse } from 'd3';
 const styles = require('./tooltip.scss');
 
