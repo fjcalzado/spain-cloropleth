@@ -21,7 +21,7 @@ export interface Props {
 
 export class MapComponent extends React.Component<Props, {}> {
   private nodes = {
-    root: null,
+    root: React.createRef<HTMLDivElement>(),
     svg: React.createRef<SVGSVGElement>(),
   };
 
@@ -35,13 +35,9 @@ export class MapComponent extends React.Component<Props, {}> {
     clickZoomFitScale: 0.65,
   };
 
-  setRootNode = (node) => {
-    this.nodes.root = node;
-  }
-
   public componentDidMount() {
     mapComponent({
-      // root: select(this.nodes.root),
+      root: select(this.nodes.root.current),
       svg: select(this.nodes.svg.current),
       areas: mapAreaListModelToVM(this.props.nuts, this.props.data),
       geometryObjects: this.props.nuts.featureCollection,
@@ -61,7 +57,7 @@ export class MapComponent extends React.Component<Props, {}> {
 
   public render() {
     return (
-      <div className={styles.container} ref={this.setRootNode}>
+      <div className={styles.container} ref={this.nodes.root}>
         <svg
           ref={this.nodes.svg}
           className={styles.svg}

@@ -17,5 +17,6 @@ const mapAreaModelToVM = (geometryObject: Feature<GeometryObject, any>, nutsAPI:
     id,
     geometryObject,
     color: dataAPI.getColor(values),
+    tooltipMessage: dataAPI.getTooltipContent(values),
   };
 };

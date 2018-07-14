@@ -1,6 +1,7 @@
 import { event as d3Event } from 'd3-selection';
 import { zoom, zoomIdentity } from 'd3-zoom';
-import { Area, D3Selection, Extension } from '../viewModel';
+import { D3Selection, Extension } from '../../../common/types';
+import { Area } from '../viewModel';
 
 interface Props {
   svg: D3Selection;

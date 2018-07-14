@@ -1,4 +1,4 @@
-import { D3Selection } from '../viewModel';
+import { D3Selection } from '../../../common/types';
 import { SVG_SHADOW_ID } from './constants';
 
 

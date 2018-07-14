@@ -1,14 +1,16 @@
+import { select, BaseType } from 'd3';
 import { geoPath, GeoProjection, GeoPath, GeoPermissibleObjects } from 'd3-geo';
 import { GeometryObject, FeatureCollection } from 'geojson';
+import { D3Selection, Extension } from '../../../common/types';
+import { Area } from '../viewModel';
+import { SVG_SHADOW_ID } from './constants';
 import { shadowDefinitions } from './shadowDefinitions';
 import { zoomComponent } from './zoom';
-import { Area, Extension, D3Selection } from '../viewModel';
-import { SVG_SHADOW_ID } from './constants';
-import { select, BaseType } from 'd3';
+import { tooltipComponent } from '../../../common/d3Components/tooltip/tooltip';
 const styles = require('./map.scss');
 
 interface Props {
-  // root: D3Selection<any>; // For tooltip
+  root: D3Selection;
   svg: D3Selection;
   areas: Area[];
   geometryObjects: FeatureCollection<GeometryObject, any>;
@@ -26,14 +28,13 @@ interface State {
   map: D3Selection;
   mapExtension: Extension;
   geoPathGenerator: GeoPath<any, GeoPermissibleObjects>;
+  onShowTooltip: (message: string) => void;
+  onHideTooltip: () => void;
+  onUpdateTooltipPosition: () => void;
 }
 
 export const mapComponent = (props: Props) => {
-  const state: State = {
-    map: null,
-    mapExtension: null,
-    geoPathGenerator: null,
-  };
+  const state = createEmptyState();
   shadowDefinitions({
     svg: props.svg,
   });
@@ -57,7 +58,23 @@ export const mapComponent = (props: Props) => {
     width: props.width,
     height: props.height,
   });
-}
+
+  const { onShowTooltip, onHideTooltip, onUpdateTooltipPosition } = tooltipComponent({
+    node: props.root,
+  });
+  state.onShowTooltip = onShowTooltip;
+  state.onHideTooltip = onHideTooltip;
+  state.onUpdateTooltipPosition = onUpdateTooltipPosition;
+};
+
+const createEmptyState = (): State => ({
+  map: null,
+  mapExtension: null,
+  geoPathGenerator: null,
+  onShowTooltip: null,
+  onHideTooltip: null,
+  onUpdateTooltipPosition: null,
+});
 
 const renderMap = (props: Props) => props.svg
   .append('g');
@@ -75,23 +92,16 @@ const enter = (props: Props, state: State) => {
         area.color :
         props.defaultfillColor
     ))
-    .on('mouseenter', function() {
+    .on('mouseenter', function(area: Area) {
       addHighlight(this, props.highlightColor);
+      state.onShowTooltip(area.tooltipMessage);
     })
+    .on('mousemove', () => state.onUpdateTooltipPosition)
     .on('mouseleave', function() {
       removeHighlight(this);
-    })
-  // .on('mouseenter', function(datum: MergedNutData) {
-  //   moveToFront(this);
-  //   applyHighlight(this);
-  //   showTooltip(datum, tooltip, dataApi);
-  // })
-  // .on('mousemove', () => updateTooltipPosition(tooltip))
-  // .on('mouseleave', function(datum: MergedNutData) {
-  //   resetHighlight(this);
-  //   hideTooltip(tooltip);
-  // })
-}
+      state.onHideTooltip();
+    });
+};
 
 const calculateMapExtension = ({ width, height, padding }: Props): Extension => ([
   [padding, padding],
