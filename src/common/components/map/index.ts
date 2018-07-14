@@ -1,1 +1,2 @@
-export { MapComponent } from './map';
+export * from './map';
+export * from './viewModel';

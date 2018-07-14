@@ -1,7 +1,7 @@
 import { Feature, GeometryObject } from 'geojson';
-import { NutsAPI } from '../../../api/geo';
-import { DataAPI } from '../../../api/data';
-import { Area } from './viewModel';
+import { NutsAPI } from '../../api/geo';
+import { DataAPI } from '../../api/data';
+import { Area } from '../../common/components/map';
 
 // TODO: Remove NutsAPI and DataAPI
 export const mapAreaListModelToVM = (nutsAPI: NutsAPI, dataAPI: DataAPI): Area[] => (

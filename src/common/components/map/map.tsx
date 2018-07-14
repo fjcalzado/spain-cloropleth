@@ -1,19 +1,18 @@
 import * as React from 'react';
 import { select } from 'd3-selection';
 import { GeoProjection, geoMercator } from 'd3-geo';
-import { NutsAPI } from '../../../api/geo';
-import { DataAPI } from '../../../api/data';
+import { FeatureCollection, GeometryObject } from 'geojson';
 import { mapComponent } from './d3Components';
-import { mapAreaListModelToVM } from './mapper';
+import { Area } from './viewModel';
 const styles = require('./map.scss');
 
 export interface Props {
-  nuts: NutsAPI;
-  data?: DataAPI;
+  areas: Area[];
+  geometryObjects: FeatureCollection<GeometryObject, any>;
+  projection?: GeoProjection;
   width?: number;
   height?: number;
   padding?: number;
-  projection?: GeoProjection;
   defaultfillColor?: string;
   maxZoomScale?: number;
   clickZoomFitScale?: number;
@@ -39,9 +38,9 @@ export class MapComponent extends React.Component<Props, {}> {
     mapComponent({
       root: select(this.nodes.root.current),
       svg: select(this.nodes.svg.current),
-      areas: mapAreaListModelToVM(this.props.nuts, this.props.data),
-      geometryObjects: this.props.nuts.featureCollection,
-      projection: this.props.nuts.projection,
+      areas: this.props.areas,
+      geometryObjects: this.props.geometryObjects,
+      projection: this.props.projection,
       width: this.props.width,
       height: this.props.height,
       padding: this.props.padding,
@@ -60,7 +59,6 @@ export class MapComponent extends React.Component<Props, {}> {
       <div className={styles.container} ref={this.nodes.root}>
         <svg
           ref={this.nodes.svg}
-          className={styles.svg}
           viewBox={`0 0 ${this.props.width} ${this.props.height}`}
         >
         </svg>
