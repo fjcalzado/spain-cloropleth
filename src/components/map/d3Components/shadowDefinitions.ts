@@ -1,7 +1,6 @@
 import { D3Selection } from '../../../common/types';
 import { SVG_SHADOW_ID } from './constants';
 
-
 interface Props {
   svg: D3Selection;
 }

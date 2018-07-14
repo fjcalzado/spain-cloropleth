@@ -5,8 +5,8 @@ import { D3Selection, Extension } from '../../../common/types';
 import { Area } from '../viewModel';
 import { SVG_SHADOW_ID } from './constants';
 import { shadowDefinitions } from './shadowDefinitions';
-import { zoomComponent } from './zoom';
-import { tooltipComponent } from '../../../common/d3Components/tooltip/tooltip';
+import { tooltipComponent } from '../../../common/d3Components/tooltip';
+import { zoomComponent } from '../../../common/d3Components/zoom';
 const styles = require('./map.scss');
 
 interface Props {
@@ -47,11 +47,12 @@ export const mapComponent = (props: Props) => {
 
   zoomComponent({
     svg: props.svg,
-    map: state.map,
-    areas: props.areas,
-    mapExtension: state.mapExtension,
-    getAreaExtension: (area: Area) => (
-      state.geoPathGenerator.bounds(area.geometryObject)
+    node: state.map,
+    zoomAreas: props.areas,
+    nodeExtension: state.mapExtension,
+    nodeSelectionElement: 'path',
+    getZoomAreaExension: (geometryObject) => (
+      state.geoPathGenerator.bounds(geometryObject)
     ),
     maxZoomScale: props.maxZoomScale,
     clickZoomFitScale: props.clickZoomFitScale,
