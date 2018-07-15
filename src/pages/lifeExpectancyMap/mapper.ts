@@ -4,16 +4,16 @@ import { interpolateBuGn } from 'd3-scale-chromatic';
 import { GeoArea, createEmptyGeoArea } from '../../common/components/map';
 import { getId } from '../../common/geo/spain';
 import * as vm from './viewModel';
-import * as model from '../../rest-api/model/lifeExpectancy';
+import * as model from '../../rest-api/model';
 
 
-export const mapLifeExpectancyEntitiesModelToVM = (lifeExpectancyEntities: model.LifeExpectancy[]): vm.LifeExpectancyEntity[] => (
+export const mapLifeExpectancyEntitiesModelToVM = (lifeExpectancyEntities: model.LifeExpectancyEntity[]): vm.LifeExpectancyEntity[] => (
   Boolean(lifeExpectancyEntities) ?
     lifeExpectancyEntities.map(mapLifeExpectancyEntityModelToVM) :
     []
 );
 
-const mapLifeExpectancyEntityModelToVM = (lifeExpectancyEntity: model.LifeExpectancy): vm.LifeExpectancyEntity => (
+const mapLifeExpectancyEntityModelToVM = (lifeExpectancyEntity: model.LifeExpectancyEntity): vm.LifeExpectancyEntity => (
   Boolean(lifeExpectancyEntity) ?
     {
       id: lifeExpectancyEntity.id.toString(),
@@ -33,15 +33,15 @@ export const mapGeoAreaListModelToVM = (geoEntities: FeatureCollection<GeometryO
 
 const mapGeoAreaModelToVM = (geoEntity, lifeExpectancyEntities: vm.LifeExpectancyEntity[]): GeoArea => {
   const id = getId(geoEntity);
-  const lifeExpectancy = lifeExpectancyEntities.find(l => l.id === id);
+  const lifeExpectancyEntity = lifeExpectancyEntities.find(l => l.id === id);
   const scale = getScale(lifeExpectancyEntities);
 
-  return Boolean(lifeExpectancy) ?
+  return Boolean(lifeExpectancyEntity) ?
     {
       id,
       geoEntity,
-      color: getColor(lifeExpectancy, scale),
-      tooltipMessage: getTooltipMessage(lifeExpectancy),
+      color: getColor(lifeExpectancyEntity, scale),
+      tooltipMessage: getTooltipMessage(lifeExpectancyEntity),
     } :
     createEmptyGeoArea();
 };

@@ -1,4 +1,4 @@
-export interface LifeExpectancy {
+export interface LifeExpectancyEntity {
   id: number;
   name: string;
   both: number;

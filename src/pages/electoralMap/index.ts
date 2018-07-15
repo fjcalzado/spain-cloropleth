@@ -1,1 +1,1 @@
-export * from './electoralMap';
+export * from './electoralMapContainer';

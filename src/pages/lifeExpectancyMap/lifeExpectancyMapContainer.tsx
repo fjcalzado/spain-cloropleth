@@ -18,7 +18,7 @@ export class LifeExpectancyMapContainer extends React.PureComponent<{}, State> {
   };
 
   componentDidMount() {
-    lifeExpectancyAPI.fetchLifeExpectancy()
+    lifeExpectancyAPI.fetchLifeExpectancyEntities()
       .then((lifeExpectancyEntities) => {
         this.setState({
           lifeExpectancyEntities: mapLifeExpectancyEntitiesModelToVM(lifeExpectancyEntities),

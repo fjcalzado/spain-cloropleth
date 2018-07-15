@@ -1,17 +1,23 @@
 import * as React from 'react';
+import { FeatureCollection, GeometryObject } from 'geojson';
 import { MapComponent } from '../../common/components/map';
-import { getElectionData } from '../../api/data';
 import { mapGeoAreaListModelToVM } from './mapper';
-import { getProjection, getGeoEntities, geoAreaTypes } from '../../common/geo/spain';
+import { getProjection } from '../../common/geo/spain';
+import { ElectoralVoteEntity } from './viewModel';
 const styles = require('./electoralMap.scss');
 
-export const ElectoralMapComponent: React.StatelessComponent = (props) => (
+interface Props {
+  electoralVoteEntities: ElectoralVoteEntity[];
+  geoEntities: FeatureCollection<GeometryObject, any>;
+}
+
+export const ElectoralMapComponent: React.StatelessComponent<Props> = (props) => (
   <div className={styles.electoralMap}>
     <h1 className={styles.header}>Electoral map</h1>
     <div className={styles.mapContainer}>
       <MapComponent
-        geoAreas={mapGeoAreaListModelToVM(getElectionData())}
-        geoEntities={getGeoEntities(geoAreaTypes.municipalities)}
+        geoAreas={mapGeoAreaListModelToVM(props.geoEntities, props.electoralVoteEntities)}
+        geoEntities={props.geoEntities}
         projection={getProjection()}
       />
     </div>

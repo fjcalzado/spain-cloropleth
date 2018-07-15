@@ -1,15 +1,15 @@
-import { LifeExpectancy } from '../../model/lifeExpectancy';
+import { LifeExpectancyEntity } from '../../model';
 
-const lifeExpectancyJSON: any[] = require('./life-expectancy.2016.spain.json');
+const lifeExpectancyEntities: any[] = require('./life-expectancy.2016.spain.json');
 
-const fetchLifeExpectancy = (): Promise<LifeExpectancy[]> => (
-  Promise.resolve(lifeExpectancyJSON.map(mapLifeExpectancyModel))
+const fetchLifeExpectancyEntities = (): Promise<LifeExpectancyEntity[]> => (
+  Promise.resolve(lifeExpectancyEntities.map(mapLifeExpectancyModel))
 );
 
-const mapLifeExpectancyModel = (lifeExpectancy): LifeExpectancy => ({
-  ...lifeExpectancy,
+const mapLifeExpectancyModel = (lifeExpectancyEntity): LifeExpectancyEntity => ({
+  ...lifeExpectancyEntity,
 })
 
 export const lifeExpectancyAPI = {
-  fetchLifeExpectancy,
+  fetchLifeExpectancyEntities,
 };
