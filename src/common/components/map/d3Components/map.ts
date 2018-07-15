@@ -53,8 +53,8 @@ export const mapComponent = (props: Props) => {
     zoomAreas: props.geoAreas,
     nodeExtension: state.mapExtension,
     nodeSelectionElement: 'path',
-    getZoomAreaExension: (geoEntity) => (
-      state.geoPathGenerator.bounds(geoEntity)
+    getZoomAreaExension: (geoArea: GeoArea) => (
+      state.geoPathGenerator.bounds(geoArea.geoEntity)
     ),
     maxZoomScale: props.maxZoomScale,
     clickZoomFitScale: props.clickZoomFitScale,
