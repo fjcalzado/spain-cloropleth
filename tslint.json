@@ -78,6 +78,7 @@
     "no-implicit-dependencies": false,
     "no-this-assignment": false,
     "object-literal-shorthand": false,
-    "no-object-literal-type-assertion": false
+    "no-object-literal-type-assertion": false,
+    "arrow-parens": false,
   }
 }

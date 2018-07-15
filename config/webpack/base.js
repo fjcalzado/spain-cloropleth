@@ -1,60 +1,48 @@
+
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const helpers = require('../helpers');
 
+const srcPath = helpers.resolveFromRootPath('src');
+
 module.exports = {
-  context: helpers.resolveFromRootPath('src'),
+  context: srcPath,
   entry: {
     app: [
       './index.tsx',
     ],
-    vendor: [
-      'babel-polyfill',
-      'material-ui',
-      'react',
-      'react-dom',
-      'react-hot-loader',
-      'react-router',
-      'whatwg-fetch',
-    ],
     appStyles: [
-      './content/styles/styles.scss',
+      './styles/_base.scss',
     ],
   },
   resolve: {
     extensions: ['.js', '.ts', '.tsx'],
+    alias: {
+      "@material-ui/core": "@material-ui/core/es",
+    }
   },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
         exclude: '/node_modules/',
-        loader: 'awesome-typescript-loader',
-        options: {
-          useBabel: true,
-          useCache: true,
-        },
+        loader: 'ts-loader',
       },
       {
         test: /\.scss$/,
         exclude: '/node_modules/',
-        loader: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                modules: true,
-                camelCase: true,
-                localIdentName: '[name]__[local]___[hash:base64:5]',
-              },
+        use: [
+          { loader: 'style-loader' },
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              camelCase: true,
+              localIdentName: '[name]__[local]___[hash:base64:5]',
             },
-            {
-              loader: 'sass-loader',
-            },
-          ],
-        }),
+          },
+          { loader: 'sass-loader' },
+        ],
       },
       {
         test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
@@ -76,30 +64,36 @@ module.exports = {
         test: /\.(png|jpg|ico)?$/,
         loader: 'url-loader?limit=10000&mimetype=image/png',
       },
-      {
-        test: /\.json$/,
-        loader: 'json-loader'
-      },
-      {
-        test: /\.(csv|tsv)$/,
-        loader: 'csv-loader',
-        options: {
-          dynamicTyping: true,
-          header: true,
-          skipEmptyLines: true
-        }
-      },
     ]
   },
+  optimization: {
+    splitChunks: {
+      chunks: "all",
+      cacheGroups: {
+        vendorGroup: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendor",
+          enforce: true,
+        },
+        mockGroup: {
+          test: /[\\/]data[\\/]mock[\\/]/,
+          name: "mock.data",
+          enforce: true,
+        },
+        geoGroup: {
+          test: /[\\/]data[\\/]geo[\\/]/,
+          name: "geo.data",
+          enforce: true,
+        },
+      },
+    },
+  },
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin({
-      names: ['vendor', 'manifest'],
-    }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'index.html',
       hash: true,
-      chunks: ['manifest', 'vendor', 'appStyles', 'app'],
+      chunks: ['manifest', 'vendor', 'mock.data', 'geo.data', 'app', 'appStyles'],
       chunksSortMode: 'manual',
     }),
     new webpack.DefinePlugin({
