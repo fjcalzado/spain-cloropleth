@@ -7,3 +7,9 @@ export interface GeoArea {
   tooltipMessage: string;
 }
 
+export const createEmptyGeoArea = (): GeoArea => ({
+  id: '',
+  geoEntity: null,
+  color: '',
+  tooltipMessage: '',
+})

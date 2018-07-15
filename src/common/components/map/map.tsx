@@ -20,7 +20,7 @@ export interface Props {
   className?: string;
 }
 
-export class MapComponent extends React.Component<Props, {}> {
+export class MapComponent extends React.PureComponent<Props, {}> {
   private nodes = {
     root: React.createRef<HTMLDivElement>(),
     svg: React.createRef<SVGSVGElement>(),
@@ -37,23 +37,34 @@ export class MapComponent extends React.Component<Props, {}> {
   };
 
   public componentDidMount() {
+    if (this.areThereGeoAreas(this.props)) {
+      this.renderD3MapComponent(this.props);
+    }
+  }
+
+  componentDidUpdate() {
+    this.renderD3MapComponent(this.props);
+  }
+
+  private areThereGeoAreas = (props: Props) => (
+    Array.isArray(props.geoAreas) &&
+    props.geoAreas.length > 0
+  );
+
+  private renderD3MapComponent = (props: Props) => {
     mapComponent({
       root: select(this.nodes.root.current),
       svg: select(this.nodes.svg.current),
-      geoAreas: this.props.geoAreas,
-      geoEntities: this.props.geoEntities,
-      projection: this.props.projection,
-      width: this.props.width,
-      height: this.props.height,
-      padding: this.props.padding,
-      defaultfillColor: this.props.defaultfillColor,
-      maxZoomScale: this.props.maxZoomScale,
-      clickZoomFitScale: this.props.clickZoomFitScale,
-    })
-  }
-
-  public shouldComponentUpdate() {
-    return false;
+      geoAreas: props.geoAreas,
+      geoEntities: props.geoEntities,
+      projection: props.projection,
+      width: props.width,
+      height: props.height,
+      padding: props.padding,
+      defaultfillColor: props.defaultfillColor,
+      maxZoomScale: props.maxZoomScale,
+      clickZoomFitScale: props.clickZoomFitScale,
+    });
   }
 
   public render() {

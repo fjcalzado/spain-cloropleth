@@ -1,1 +1,1 @@
-export * from './lifeExpectancyMap';
+export * from './lifeExpectancyMapContainer';
