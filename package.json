@@ -48,6 +48,7 @@
     "@types/react-router": "^3.0.15",
     "@types/redux-mock-store": "0.0.13",
     "@types/topojson-client": "^3.0.0",
+    "@types/topojson-simplify": "^3.0.0",
     "@types/topojson-specification": "^1.0.0",
     "@types/webpack-env": "^1.13.5",
     "babel-core": "^6.26.0",

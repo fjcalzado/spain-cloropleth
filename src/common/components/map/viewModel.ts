@@ -1,8 +1,8 @@
 import { Feature, GeometryObject } from 'geojson';
 
 export interface GeoArea {
-  id: any;
-  geometryObject: Feature<GeometryObject, any>;
+  id: string;
+  geoEntity: Feature<GeometryObject, any>;
   color: string;
   tooltipMessage: string;
 }

@@ -9,7 +9,7 @@ const styles = require('./map.scss');
 
 export interface Props {
   geoAreas: GeoArea[];
-  geometryObjects: FeatureCollection<GeometryObject, any>;
+  geoEntities: FeatureCollection<GeometryObject, any>;
   projection?: GeoProjection;
   width?: number;
   height?: number;
@@ -41,7 +41,7 @@ export class MapComponent extends React.Component<Props, {}> {
       root: select(this.nodes.root.current),
       svg: select(this.nodes.svg.current),
       geoAreas: this.props.geoAreas,
-      geometryObjects: this.props.geometryObjects,
+      geoEntities: this.props.geoEntities,
       projection: this.props.projection,
       width: this.props.width,
       height: this.props.height,

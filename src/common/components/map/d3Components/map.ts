@@ -13,7 +13,7 @@ interface Props {
   root: D3Selection;
   svg: D3Selection;
   geoAreas: GeoArea[];
-  geometryObjects: FeatureCollection<GeometryObject, any>;
+  geoEntities: FeatureCollection<GeometryObject, any>;
   projection: GeoProjection;
   width: number;
   height: number;
@@ -51,8 +51,8 @@ export const mapComponent = (props: Props) => {
     zoomAreas: props.geoAreas,
     nodeExtension: state.mapExtension,
     nodeSelectionElement: 'path',
-    getZoomAreaExension: (geometryObject) => (
-      state.geoPathGenerator.bounds(geometryObject)
+    getZoomAreaExension: (geoEntity) => (
+      state.geoPathGenerator.bounds(geoEntity)
     ),
     maxZoomScale: props.maxZoomScale,
     clickZoomFitScale: props.clickZoomFitScale,
@@ -87,7 +87,7 @@ const enter = (props: Props, state: State) => {
     .enter()
     .append('path')
     .attr('class', styles.geoArea)
-    .attr('d', (geoArea: GeoArea) => state.geoPathGenerator(geoArea.geometryObject))
+    .attr('d', (geoArea: GeoArea) => state.geoPathGenerator(geoArea.geoEntity))
     .attr('fill', (geoArea: GeoArea) => (
       Boolean(geoArea.color) ?
         geoArea.color :
@@ -112,7 +112,7 @@ const calculateMapExtension = ({ width, height, padding }: Props): Extension => 
 const getGeoPathGenerator = (props: Props, state: State) => (
   geoPath(
     props.projection
-      .fitExtent(state.mapExtension, props.geometryObjects)
+      .fitExtent(state.mapExtension, props.geoEntities)
   )
 );
 

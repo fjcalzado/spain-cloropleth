@@ -5,7 +5,7 @@ import { D3Selection, Extension } from '../../../common/types';
 
 interface ZoomArea {
   id: any;
-  geometryObject: Feature<GeometryObject, any>;
+  geoEntity: Feature<GeometryObject, any>;
 }
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
   zoomAreas: ZoomArea[];
   nodeExtension: Extension;
   nodeSelectionElement: string;
-  getZoomAreaExension: (geometryObject: Feature<GeometryObject, any>) => Extension;
+  getZoomAreaExension: (geoEntity: Feature<GeometryObject, any>) => Extension;
   maxZoomScale: number;
   clickZoomFitScale: number;
   width: number;
@@ -59,7 +59,7 @@ const getZoomHandler = ({ node, nodeExtension, maxZoomScale }: Props) => zoom()
   });
 
 const applyZoom = (zoomArea: ZoomArea, props: Props, state: State) => {
-  const zoomAreaExtension = props.getZoomAreaExension(zoomArea.geometryObject);
+  const zoomAreaExtension = props.getZoomAreaExension(zoomArea.geoEntity);
 
   const dx = zoomAreaExtension[1][0] - zoomAreaExtension[0][0];
   const dy = zoomAreaExtension[1][1] - zoomAreaExtension[0][1];

@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { MapComponent } from '../../common/components/map';
-import { getNuts } from '../../api/geo';
 import { getElectionData } from '../../api/data';
-import { spainLevel4 } from '../../api/geo/nuts.spain';
 import { mapGeoAreaListModelToVM } from './mapper';
+import { getProjection, getGeoEntities, geoAreaTypes } from '../../common/geo/spain';
 const styles = require('./electoralMap.scss');
 
 export const ElectoralMapComponent: React.StatelessComponent = (props) => (
@@ -11,9 +10,9 @@ export const ElectoralMapComponent: React.StatelessComponent = (props) => (
     <h1 className={styles.header}>Electoral map</h1>
     <div className={styles.mapContainer}>
       <MapComponent
-        geoAreas={mapGeoAreaListModelToVM(getNuts(spainLevel4), getElectionData())}
-        geometryObjects={getNuts(spainLevel4).featureCollection}
-        projection={getNuts(spainLevel4).projection}
+        geoAreas={mapGeoAreaListModelToVM(getElectionData())}
+        geoEntities={getGeoEntities(geoAreaTypes.municipalities)}
+        projection={getProjection()}
       />
     </div>
   </div>

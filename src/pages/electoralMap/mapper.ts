@@ -1,21 +1,20 @@
-import { Feature, GeometryObject } from 'geojson';
-import { NutsAPI } from '../../api/geo';
 import { DataAPI } from '../../api/data';
 import { GeoArea } from '../../common/components/map';
+import { getGeoEntities, geoAreaTypes, getId } from '../../common/geo/spain';
 
 // TODO: Remove NutsAPI and DataAPI
-export const mapGeoAreaListModelToVM = (nutsAPI: NutsAPI, dataAPI: DataAPI): GeoArea[] => (
-  nutsAPI.featureCollection.features.map((geometryObject) => (
-    mapGeoAreaModelToVM(geometryObject, nutsAPI, dataAPI)
+export const mapGeoAreaListModelToVM = (dataAPI: DataAPI): GeoArea[] => (
+  getGeoEntities(geoAreaTypes.municipalities).features.map((geoEntity) => (
+    mapGeoAreaModelToVM(geoEntity, dataAPI)
   ))
 );
 
-const mapGeoAreaModelToVM = (geometryObject: Feature<GeometryObject, any>, nutsAPI: NutsAPI, dataAPI: DataAPI): GeoArea => {
-  const id = nutsAPI.key(geometryObject);
+const mapGeoAreaModelToVM = (geoEntity, dataAPI: DataAPI): GeoArea => {
+  const id = getId(geoEntity);
   const values = dataAPI.dataCollection.find(d => dataAPI.getKey(d) === id);
   return {
     id,
-    geometryObject,
+    geoEntity,
     color: dataAPI.getColor(values),
     tooltipMessage: dataAPI.getTooltipContent(values),
   };
