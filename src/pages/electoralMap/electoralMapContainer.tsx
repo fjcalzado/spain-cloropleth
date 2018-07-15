@@ -1,20 +1,22 @@
 import * as React from 'react';
-import { FeatureCollection, GeometryObject } from 'geojson';
+import { FeatureCollection, GeometryObject, MultiLineString } from 'geojson';
 import { ElectoralVoteEntity } from './viewModel';
 import { electoralVoteAPI } from '../../rest-api/api/electoralVote';
-import { getGeoEntities, geoAreaTypes } from '../../common/geo/spain';
+import { getGeoEntities, geoAreaTypes, getMesh } from '../../common/geo/spain';
 import { ElectoralMapComponent } from './electoralMap';
 import { mapElectoralVoteEntitiesModelToVM } from './mapper';
 
 interface State {
   electoralVoteEntities: ElectoralVoteEntity[];
   geoEntities: FeatureCollection<GeometryObject, any>;
+  mesh: MultiLineString;
 }
 
 export class ElectoralMapContainer extends React.PureComponent<{}, State> {
   state = {
     electoralVoteEntities: [],
     geoEntities: null,
+    mesh: null,
   };
 
   componentDidMount() {
@@ -22,7 +24,8 @@ export class ElectoralMapContainer extends React.PureComponent<{}, State> {
       .then((electoralVoteEntities) => {
         this.setState({
           electoralVoteEntities: mapElectoralVoteEntitiesModelToVM(electoralVoteEntities),
-          geoEntities: getGeoEntities(geoAreaTypes.municipalities)
+          geoEntities: getGeoEntities(geoAreaTypes.municipalities),
+          mesh: getMesh(geoAreaTypes.municipalities),
         })
       });
   }
@@ -32,6 +35,7 @@ export class ElectoralMapContainer extends React.PureComponent<{}, State> {
       <ElectoralMapComponent
         electoralVoteEntities={this.state.electoralVoteEntities}
         geoEntities={this.state.geoEntities}
+        mesh={this.state.mesh}
       />
     );
   }

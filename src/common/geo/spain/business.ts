@@ -1,9 +1,9 @@
 import { Topology, GeometryObject } from 'topojson-specification';
 import { presimplify, simplify } from 'topojson-simplify';
-import { feature } from 'topojson-client';
+import { feature, mesh } from 'topojson-client';
 import { geoConicConformalSpain } from 'd3-composite-projections';
 import { GeoAreaType } from './model';
-import { Feature, FeatureCollection, GeometryCollection } from 'geojson';
+import { Feature, FeatureCollection, MultiLineString } from 'geojson';
 
 export const getGeoEntities = (geoAreaType: GeoAreaType): FeatureCollection<GeometryObject, any> => {
   const geoJSON = getGeoJSONSimplyfied(geoAreaType);
@@ -12,6 +12,15 @@ export const getGeoEntities = (geoAreaType: GeoAreaType): FeatureCollection<Geom
     geoJSON,
     geoJSON.objects[geoAreaType.name],
   ) as FeatureCollection<GeometryObject, any>;
+};
+
+export const getMesh = (geoAreaType: GeoAreaType): MultiLineString => {
+  const geoJSON = getGeoJSONSimplyfied(geoAreaType);
+
+  return mesh(
+    geoJSON,
+    geoJSON.objects[geoAreaType.name],
+  );
 };
 
 const getGeoJSONSimplyfied = ({ geoJSON, simplificationFactor }: GeoAreaType): Topology => (

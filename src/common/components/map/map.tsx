@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { select } from 'd3-selection';
 import { GeoProjection, geoMercator } from 'd3-geo';
-import { FeatureCollection, GeometryObject } from 'geojson';
+import { FeatureCollection, GeometryObject, MultiLineString } from 'geojson';
 import { mapComponent } from './d3Components';
 import { GeoArea } from './viewModel';
 import { cnc } from '../../helpers/classname';
@@ -10,6 +10,7 @@ const styles = require('./map.scss');
 export interface Props {
   geoAreas: GeoArea[];
   geoEntities: FeatureCollection<GeometryObject, any>;
+  mesh: MultiLineString;
   projection?: GeoProjection;
   width?: number;
   height?: number;
@@ -37,33 +38,34 @@ export class MapComponent extends React.PureComponent<Props, {}> {
   };
 
   public componentDidMount() {
-    if (this.areThereGeoAreas(this.props)) {
-      this.renderD3MapComponent(this.props);
+    if (this.areThereGeoAreas()) {
+      this.renderD3MapComponent();
     }
   }
 
   componentDidUpdate() {
-    this.renderD3MapComponent(this.props);
+    this.renderD3MapComponent();
   }
 
-  private areThereGeoAreas = (props: Props) => (
-    Array.isArray(props.geoAreas) &&
-    props.geoAreas.length > 0
+  private areThereGeoAreas = () => (
+    Array.isArray(this.props.geoAreas) &&
+    this.props.geoAreas.length > 0
   );
 
-  private renderD3MapComponent = (props: Props) => {
+  private renderD3MapComponent = () => {
     mapComponent({
       root: select(this.nodes.root.current),
       svg: select(this.nodes.svg.current),
-      geoAreas: props.geoAreas,
-      geoEntities: props.geoEntities,
-      projection: props.projection,
-      width: props.width,
-      height: props.height,
-      padding: props.padding,
-      defaultfillColor: props.defaultfillColor,
-      maxZoomScale: props.maxZoomScale,
-      clickZoomFitScale: props.clickZoomFitScale,
+      geoAreas: this.props.geoAreas,
+      geoEntities: this.props.geoEntities,
+      mesh: this.props.mesh,
+      projection: this.props.projection,
+      width: this.props.width,
+      height: this.props.height,
+      padding: this.props.padding,
+      defaultfillColor: this.props.defaultfillColor,
+      maxZoomScale: this.props.maxZoomScale,
+      clickZoomFitScale: this.props.clickZoomFitScale,
     });
   }
 

@@ -1,6 +1,6 @@
 import { select, BaseType } from 'd3';
 import { geoPath, GeoProjection, GeoPath, GeoPermissibleObjects } from 'd3-geo';
-import { GeometryObject, FeatureCollection } from 'geojson';
+import { GeometryObject, FeatureCollection, MultiLineString } from 'geojson';
 import { D3Selection, Extension } from '../../../types';
 import { GeoArea } from '../viewModel';
 import { SVG_SHADOW_ID } from './constants';
@@ -14,6 +14,7 @@ interface Props {
   svg: D3Selection;
   geoAreas: GeoArea[];
   geoEntities: FeatureCollection<GeometryObject, any>;
+  mesh: MultiLineString;
   projection: GeoProjection;
   width: number;
   height: number;
@@ -44,6 +45,7 @@ export const mapComponent = (props: Props) => {
   state.geoPathGenerator = getGeoPathGenerator(props, state);
 
   enter(props, state);
+  renderMesh(props, state);
 
   zoomComponent({
     svg: props.svg,
@@ -77,11 +79,11 @@ const createEmptyState = (): State => ({
   onUpdateTooltipPosition: null,
 });
 
-const renderMap = (props: Props) => props.svg
-  .append('g');
+const renderMap = (props: Props) => props.svg.append('g');
 
 const enter = (props: Props, state: State) => {
   state.map
+    .append('g')
     .selectAll('path')
     .data(props.geoAreas, (geoArea: GeoArea) => geoArea.id)
     .enter()
@@ -103,6 +105,18 @@ const enter = (props: Props, state: State) => {
       state.onHideTooltip();
     });
 };
+
+// Useful for rendering strokes in complicated objects efficiently
+// https://github.com/topojson/topojson-client/blob/master/README.md#mesh
+const renderMesh = (props: Props, state: State) => {
+  state.map
+    .append('g')
+    .append('path')
+    // Assign mesh to a single path
+    .datum(props.mesh)
+    .attr('class', styles.mesh)
+    .attr('d', state.geoPathGenerator);
+}
 
 const calculateMapExtension = ({ width, height, padding }: Props): Extension => ([
   [padding, padding],
